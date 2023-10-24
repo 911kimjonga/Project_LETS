@@ -46,14 +46,14 @@ logging:
           DataSourceTransactionManager: warn
         transaction:
           interceptor: warn
-      
+
     com:
       ezen:
         springmvc:
           domain:
             member:
               mapper: trace       # mybatis 처리 로그
-  
+
 ---
 
 # Spring 설정
@@ -61,12 +61,23 @@ spring:
   #Database 연결 정보 설정
   config:
     import: db-config.properties
+  # Thymeleaf 설정
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false                 # Cache 사용하지 않게 설정
+  devtools:
+    livereload:
+      enabled: true
+    remote:
+      restart:
+        enabled: true
   # File Upload 설정
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
-      enabled: true
+      # enabled: true
   # MessageSource 설정
   messages:
     basename: messages,errors
@@ -76,8 +87,8 @@ spring:
 # MyBatis 설정
 mybatis:
   configuration:
-    map-underscore-to-camel-case: true  
-  mapper-locations: 
+    map-underscore-to-camel-case: true
+  mapper-locations:
     - classpath:mybatis/mapper/**/*.xml
   type-aliases-package: com.vj.lets.domain.member.dto,
                         com.vj.lets.domain.cafe.dto,
@@ -92,28 +103,35 @@ mybatis:
                         com.vj.lets.domain.payment.dto,
                         com.vj.lets.domain.common.web
 
-
 ---
 
 # 파일업로드 경로 설정
 common:
-  uploadPath: C:/ezen-fullstack/workspace/final_project_lets/upload/
+  uploadPath: C:/project/upload/
 member:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/member/
-  imageDBPath: /assets/upload_image/member/
+  imageLocation: C:/project/upload_image/member/
+  imageDBPath: /image/member/
+  imageResourcePath: file:///C:/project/upload_image/member/
+  imageUploadPath: /image/member/**
 cafe:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/cafe/
-  imageDBPath: /assets/upload_image/cafe/
+  imageLocation: C:/project/upload_image/cafe/
+  imageDBPath: /image/cafe/
+  imageResourcePath: file:///C:/project/upload_image/cafe/
+  imageUploadPath: /image/cafe/**
 room:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/room/
-  imageDBPath: /assets/upload_image/room/
+  imageLocation: C:/project/upload_image/room/
+  imageDBPath: /image/room/
+  imageResourcePath: file:///C:/project/upload_image/room/
+  imageUploadPath: /image/room/**
 group:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/group/
-  imageDBPath: /assets/upload_image/group/
+  imageLocation: C:/project/upload_image/group/
+  imageDBPath: /image/group/
+  imageResourcePath: file:///C:/project/upload_image/group/
+  imageUploadPath: /image/group/**
 article:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/article/
-  imageDBPath: /assets/upload_image/article/
-  
-  
+  imageLocation: C:/project/upload_image/article/
+  imageDBPath: /image/article/
+  imageResourcePath: file:///C:/project/upload_image/article/
+  imageUploadPath: /image/article/**
   
   

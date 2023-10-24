@@ -11,27 +11,27 @@
         <th:block th:replace="${head}"></th:block>
 
         <!--/* 페이지 공통 헤드 */-->
-        <th:block th:replace="~{/dashboard/layout/fragments/dashboard_head :: head}"></th:block>
+        <th:block th:replace="~{dashboard/layout/fragments/dashboard_head :: head}"></th:block>
     </head>
 
     <body class="fixed-nav sticky-footer" id="page-top">
 
     <!--/* 페이지 공통 네비게이션바 */-->
     <th:block th:if="${session.loginMember.type == 'guest'}">
-        <th:block th:replace="~{/dashboard/layout/fragments/member_mypage_nav :: nav}"></th:block>
+        <th:block th:replace="~{dashboard/layout/fragments/member_mypage_nav :: nav}"></th:block>
     </th:block>
     <th:block th:if="${session.loginMember.type == 'host'}">
-        <th:block th:replace="~{/dashboard/layout/fragments/host_dashboard_nav :: nav}"></th:block>
+        <th:block th:replace="~{dashboard/layout/fragments/host_dashboard_nav :: nav}"></th:block>
     </th:block>
     <th:block th:if="${session.loginMember.type == 'admin'}">
-        <th:block th:replace="~{/dashboard/layout/fragments/admin_dashboard_nav :: nav}"></th:block>
+        <th:block th:replace="~{dashboard/layout/fragments/admin_dashboard_nav :: nav}"></th:block>
     </th:block>
 
     <!--/* 커스텀 콘텐츠 부분 */-->
     <th:block th:replace="${content}"></th:block>
 
     <!--/* 페이지 공통 푸터 */-->
-    <th:block th:replace="~{/dashboard/layout/fragments/dashboard_footer :: footer}"></th:block>
+    <th:block th:replace="~{dashboard/layout/fragments/dashboard_footer :: footer}"></th:block>
 
     <!--/* 페이지 최상단 이동 버튼 */-->
     <a class="scroll-to-top rounded" href="#page-top">
@@ -39,10 +39,10 @@
     </a>
 
     <!--/* 페이지 공통 로그아웃 팝업 */-->
-    <th:block th:replace="~{/dashboard/layout/fragments/dashboard_logout-popup :: logout-popup}"></th:block>
+    <th:block th:replace="~{dashboard/layout/fragments/dashboard_logout-popup :: logout-popup}"></th:block>
 
     <!--/* 페이지 공통 스크립트 */-->
-    <th:block th:replace="~{/dashboard/layout/fragments/dashboard_scripts :: scripts}"></th:block>
+    <th:block th:replace="~{dashboard/layout/fragments/dashboard_scripts :: scripts}"></th:block>
 
     <!--/* 커스텀 스크립트 */-->
     <th:block th:replace="${scripts}"></th:block>

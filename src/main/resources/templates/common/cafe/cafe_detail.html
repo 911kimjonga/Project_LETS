@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <th:block
-        th:replace="~{/common/layout/common_layout_V2 :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
+        th:replace="~{common/layout/common_layout_V2 :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
 
     <th:block th:fragment="head">
         <meta name="author" content="VJCommando">
@@ -447,7 +447,7 @@
         </script>
         <!-- Map -->
         <script type="text/javascript"
-                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2f504f2f474c5702e355f69efa5bd75c"></script>
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47fdf9c338ad8bc6200fe3f78b201924"></script>
         <script th:inline="javascript">
             var name = [[${Cafe['name']}]];
             var lat = [[${Cafe['latitude']}]];

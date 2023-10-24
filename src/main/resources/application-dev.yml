@@ -63,8 +63,8 @@ spring:
     import: db-config.properties
   # Thymeleaf 설정
   thymeleaf:
-    # prefix: classpath:/templates/
-    # suffix: .html
+    prefix: classpath:/templates/
+    suffix: .html
     cache: false                 # Cache 사용하지 않게 설정
   devtools:
     livereload:
@@ -107,22 +107,32 @@ mybatis:
 
 # 파일업로드 경로 설정
 common:
-  uploadPath: C:/ezen-fullstack/workspace/final_project_lets/upload/
+  uploadPath: C:/project/upload/
 member:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/member/
-  imageDBPath: /assets/upload_image/member/
+  imageLocation: C:/project/upload_image/member/
+  imageDBPath: /image/member/
+  imageResourcePath: file:///C:/project/upload_image/member/
+  imageUploadPath: /image/member/**
 cafe:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/cafe/
-  imageDBPath: /assets/upload_image/cafe/
+  imageLocation: C:/project/upload_image/cafe/
+  imageDBPath: /image/cafe/
+  imageResourcePath: file:///C:/project/upload_image/cafe/
+  imageUploadPath: /image/cafe/**
 room:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/room/
-  imageDBPath: /assets/upload_image/room/
+  imageLocation: C:/project/upload_image/room/
+  imageDBPath: /image/room/
+  imageResourcePath: file:///C:/project/upload_image/room/
+  imageUploadPath: /image/room/**
 group:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/group/
-  imageDBPath: /assets/upload_image/group/
+  imageLocation: C:/project/upload_image/group/
+  imageDBPath: /image/group/
+  imageResourcePath: file:///C:/project/upload_image/group/
+  imageUploadPath: /image/group/**
 article:
-  imageLocation: C:/ezen-fullstack/workspace/final_project_lets/src/main/resources/static/assets/upload_image/article/
-  imageDBPath: /assets/upload_image/article/
+  imageLocation: C:/project/upload_image/article/
+  imageDBPath: /image/article/
+  imageResourcePath: file:///C:/project/upload_image/article/
+  imageUploadPath: /image/article/**
   
   
   

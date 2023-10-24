@@ -81,12 +81,15 @@ public class CafeController {
                 .name(searchForm.getName())
                 .option(searchForm.getOption())
                 .build();
+
         if (searchForm.getCountPerson() != null && !searchForm.getCountPerson().isEmpty()) {
             cafeSearch.setCountPerson(Integer.parseInt(searchForm.getCountPerson()));
         }
-        if (searchForm.getCurrentX() != 0 && searchForm.getCurrentY() != 0) {
-            cafeSearch.setCurrentX(searchForm.getCurrentX());
-            cafeSearch.setCurrentY(searchForm.getCurrentY());
+        if (searchForm.getCurrentX() != null && !searchForm.getCurrentX().isEmpty()) {
+            cafeSearch.setCurrentX(Long.parseLong(searchForm.getCurrentX()));
+        }
+        if (searchForm.getCurrentY() != null && !searchForm.getCurrentY().isEmpty()) {
+            cafeSearch.setCurrentY(Long.parseLong(searchForm.getCurrentY()));
         }
 
         List<FaqCategory> categoryList = faqService.getCafeFaqList();

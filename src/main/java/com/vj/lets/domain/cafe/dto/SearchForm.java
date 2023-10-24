@@ -20,7 +20,7 @@ public class SearchForm {
     String name;
     String countPerson;
     String option;
-    double currentX;
-    double currentY;
+    String currentX;
+    String currentY;
 
 }

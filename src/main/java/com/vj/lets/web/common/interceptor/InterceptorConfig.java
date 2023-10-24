@@ -2,7 +2,6 @@ package com.vj.lets.web.common.interceptor;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
@@ -17,7 +16,7 @@ import java.util.List;
  * @since 2023-09-08 (금)
  */
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class InterceptorConfig implements WebMvcConfigurer {
 
     public final List<String> loginEssential = Arrays.asList("/**");
 
@@ -28,11 +27,6 @@ public class WebConfig implements WebMvcConfigurer {
     public final List<String> loginModalNotEssential = Arrays.asList("/**/*.ttf", "/**/*.woff", "/**/*.mp4", "/**/*.png", "/**/*.jpg", "/**/*.ico", "/**/*.html",
             "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
             "/mypage/**", "/host/**", "/admin/**", "/member/login/**", "/member/register/**");
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/static/assets/");
-    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

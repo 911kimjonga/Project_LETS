@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <th:block
-        th:replace="~{/dashboard/layout/dashboard_layout :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
+        th:replace="~{dashboard/layout/dashboard_layout :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
 
     <th:block th:fragment="head">
         <meta name="author" content="VJCommando">
@@ -94,7 +94,7 @@
             </div>
             <!-- /box_general -->
             <div class="d-flex flex-row-reverse inline-popups">
-                <a href="#modal-delete" class="btn_1 medium mx-1">탈퇴</a>
+                <a href="#modal_delete" class="btn_1 medium mx-1">탈퇴</a>
                 <a href="#modal-edit" class="btn_1 medium mx-1">수정</a>
             </div>
             <!-- /.container-fluid -->
@@ -196,17 +196,18 @@
         </div>
 
         <!-- delete to member popup -->
-        <div id="modal-delete"
-             class="white-popup mfp-with-anim mfp-hide">
+        <div id="modal_delete"
+             class="white-popup mfp-with-anim mfp-hide modal_delete">
             <div class="small-dialog-header">
                 <h3>회원 탈퇴</h3>
             </div>
             <div class="form-group message-reply margin-top-0">
-                <label th:for="password">비밀번호</label>
-                <input type="password" th:id="password" th:name="password" class="form-control" required>
+                <label for="deletePassword">비밀번호</label>
+                <input type="password" id="deletePassword" name="deletePassword" class="form-control deletePassword"
+                       required>
             </div>
-            <button type="submit" class="btn_1 gray delete">
-                <i class="fa fa-fw fa-times-circle-o mr-1 delete_btn"></i>
+            <button class="btn_1 gray delete delete_btn">
+                <i class="fa fa-fw fa-times-circle-o mr-1"></i>
                 회원 탈퇴
             </button>
         </div>
@@ -255,6 +256,7 @@
                 }
             };
         </script>
+        <script src="/dashboard/js/custom/mypage-dashboard_custom.js"></script>
         <!-- /custom scripts -->
     </th:block>
 

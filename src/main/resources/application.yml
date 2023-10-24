@@ -13,4 +13,4 @@ server:
 # Spring profiles 설정
 spring: 
   profiles:
-    default: dev                 # 개발 환경을 dev로 설정
+    default: prod                 # 개발 환경을 dev로 설정
