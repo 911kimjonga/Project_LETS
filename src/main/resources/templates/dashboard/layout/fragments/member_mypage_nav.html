@@ -15,7 +15,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                    <a th:href="@{/mypage}" class="nav-link" href="index.html">
+                    <a th:href="@{/mypage}" class="nav-link" href="/index.html">
                         <i class="fa fa-fw fa-dashboard"></i>
                         <span class="nav-link-text">마이페이지</span>
                     </a>
@@ -28,17 +28,17 @@
                     </a>
                     <ul class="sidenav-second-level collapse" id="collapseMyBooking">
                         <li>
-                            <a th:href="@{/mypage/reservation}" href="bookings.html"><i class="fa fa-fw fa-list"></i> 나의
+                            <a th:href="@{/mypage/reservation}" href="/bookings.html"><i class="fa fa-fw fa-list"></i> 나의
                                 예약 </a>
                         </li>
                         <li>
-                            <a th:href="@{/mypage/review}" href="reviews_confirm.html"><i class="fa fa-fw fa-star"></i>
+                            <a th:href="@{/mypage/review}" href="/reviews_confirm.html"><i class="fa fa-fw fa-star"></i>
                                 나의 리뷰 </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
-                    <a th:href="@{/group/mygroup}" class="nav-link" href="bookmarks.html">
+                    <a th:href="@{/group/mygroup}" class="nav-link" href="/bookmarks.html">
                         <i class="fa fa-fw fa-heart"></i>
                         <span class="nav-link-text">내 스터디 그룹</span>
                     </a>

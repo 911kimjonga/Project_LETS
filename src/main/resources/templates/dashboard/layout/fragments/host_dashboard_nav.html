@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                    <a th:href="@{/}" class="nav-link" href="host_dashboard.html">
+                    <a th:href="@{/}" class="nav-link" href=/host_dashboard.html">
                         <i class="fa fa-fw fa-dashboard mr-1"></i>
                         <span class="nav-link-text">대시보드</span>
                     </a>
@@ -29,11 +29,11 @@
                     </a>
                     <ul class="sidenav-second-level collapse" id="collapseRegisterCafe">
                         <li>
-                            <a th:href="@{/host/cafe}" href="cafe-register.html"><i class="fa fa-fw fa-book mr-1"></i>내
+                            <a th:href="@{/host/cafe}" href="/cafe-register.html"><i class="fa fa-fw fa-book mr-1"></i>내
                                 카페 정보</a>
                         </li>
                         <li>
-                            <a th:href="@{/host/room}" href="room-register.html"><i
+                            <a th:href="@{/host/room}" href="/room-register.html"><i
                                     class="fa-solid fa-house-circle-check mr-1"></i>룸 등록</a>
                         </li>
                     </ul>
@@ -46,16 +46,16 @@
                     </a>
                     <ul class="sidenav-second-level collapse" id="collapseMyBooking">
                         <li>
-                            <a th:href="@{/host/bookings}" href="bookings.html"><i class="fa fa-fw fa-list mr-1"></i>예약
+                            <a th:href="@{/host/bookings}" href="/bookings.html"><i class="fa fa-fw fa-list mr-1"></i>예약
                                 목록</a>
                         </li>
                         <li>
-                            <a th:href="@{/host/reviews}" href="reviews.html"><i class="fa fa-fw fa-star mr-1"></i>고객 리뷰</a>
+                            <a th:href="@{/host/reviews}" href="/reviews.html"><i class="fa fa-fw fa-star mr-1"></i>고객 리뷰</a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Bookmarks">
-                    <a th:href="@{/host/stats}" class="nav-link" href="tables.html">
+                    <a th:href="@{/host/stats}" class="nav-link" href="/tables.html">
                         <i class="fa fa-fw fa-gear mr-1"></i>
                         <span class="nav-link-text">전체 예약 데이터</span>
                     </a>
