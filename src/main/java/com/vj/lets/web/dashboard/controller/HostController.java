@@ -380,7 +380,7 @@ public class HostController {
 
 
     /**
-     * 호스트 카페에 등록된 체뷰 출력
+     * 호스트 카페에 등록된 리뷰 출력
      *
      * @param page    페이지
      * @param type    페이지 요청 타입

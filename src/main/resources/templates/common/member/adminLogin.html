@@ -7,7 +7,7 @@
     <meta name="description" content="LETS - 로그인">
     <meta name="author" content="김종원">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <title>LETS - 회원 로그인</title>
+    <title>LETS - 관리자 로그인</title>
 
     <!-- COMMON LINK -->
     <th:block th:replace="~{common/layout/fragments/common_head :: head}"></th:block>
@@ -30,14 +30,10 @@
                 <img src="/images/title_textblack.svg" width="110" height="40" alt="" class="logo_sticky">
             </a>
         </figure>
-        <div class="access_social" style="text-align: center;">
-            <a th:href="@{/google/login}" href="#0" class="social_bt google">Login with Google</a>
-        </div>
-        <div class="divider"><span>Or</span></div>
         <form id="login_form">
             <div class="form-group">
-                <label for="email">이메일</label>
-                <input value="guest1@gmail.com" type="email" id="email" name="email" class="form-control"
+                <label for="email">관리자 아이디</label>
+                <input value="kjw@gmail.com" type="email" id="email" name="email" class="form-control"
                        required>
                 <i class="icon_mail_alt"></i>
                 <div id="emailCheck" class="text-danger loginCheck"></div>
@@ -50,7 +46,7 @@
             </div>
             <div class="clearfix add_bottom_30">
                 <div class="checkboxes float-start">
-                    <label for="remember" class="container_check">이메일 기억
+                    <label for="remember" class="container_check">아이디 기억
                         <input th:checked="${loginForm.remember}" type="checkbox" id="remember" name="remember">
                         <span class="checkmark"></span>
                     </label>
@@ -58,9 +54,6 @@
             </div>
             <input type="submit" class="btn_1 rounded full-width login_btn" value="로그인" readonly>
         </form>
-        <div class="text-center add_top_10">LETS 와 함께 하실까요? <strong><a th:href="@{/member/register}"
-                                                                       href="/register.html">회원가입</a></strong>
-        </div>
         <div class="copy">© LETS</div>
     </aside>
 </div>

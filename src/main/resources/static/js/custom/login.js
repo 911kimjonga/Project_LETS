@@ -15,7 +15,6 @@ let passwordCheck = false;
 
 email.addEventListener('change', () => {
     emailCheck = emailValid(document.querySelector('#email').value);
-    console.log(emailCheck);
     let checkMessage = document.querySelector('#emailCheck');
     if (emailCheck) {
         checkMessage.innerHTML = '';
@@ -39,7 +38,26 @@ password.addEventListener('change', () => {
 document.querySelector('form#login_form').addEventListener('submit', event => {
     event.preventDefault();
 
+    let checkMessageToEmail = document.querySelector('#emailCheck');
+    let checkMessageToPassword = document.querySelector('#passwordCheck');
+    if (email.value != null) {
+        if (emailValid(email.value)) {
+            emailCheck = true;
+        } else {
+            checkMessageToEmail.innerHTML = '이메일 형식이 올바르지 않습니다.';
+        }
+    }
+    if (password.value != null) {
+        if (passwordValid(password.value)) {
+            passwordCheck = true;
+        } else {
+            checkMessageToPassword.innerHTML = '비밀번호 형식이 올바르지 않습니다.';
+        }
+    }
+
     if ((emailCheck || email.value != null) && passwordCheck) {
+        console.log(email.value);
+        console.log(password.value);
         fetch('/member/login', {
             method: 'POST',
             headers: {
@@ -50,6 +68,7 @@ document.querySelector('form#login_form').addEventListener('submit', event => {
                 password: password.value,
             }),
         }).then(response => {
+
             return response.text();
         }).then(message => {
             if (message === 'success') {
@@ -58,7 +77,6 @@ document.querySelector('form#login_form').addEventListener('submit', event => {
                 } else {
                     setCookie("remember", email.value, 0);
                 }
-
                 location.href = "/";    // 메인페이지로
             } else if (message === 'fail') {
                 alert('아이디 또는 비밀번호가 일치하지 않습니다.');

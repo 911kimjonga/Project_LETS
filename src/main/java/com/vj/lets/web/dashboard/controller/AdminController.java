@@ -4,6 +4,7 @@ import com.vj.lets.domain.cafe.dto.Cafe;
 import com.vj.lets.domain.cafe.service.CafeService;
 import com.vj.lets.domain.common.web.PageParams;
 import com.vj.lets.domain.common.web.Pagination;
+import com.vj.lets.domain.member.dto.LoginForm;
 import com.vj.lets.domain.member.dto.Member;
 import com.vj.lets.domain.member.service.MemberService;
 import com.vj.lets.domain.member.util.DefaultPassword;
@@ -39,6 +40,28 @@ public class AdminController {
 
     private static final int ELEMENT_SIZE = 3;
     private static final int PAGE_SIZE = 3;
+
+    /**
+     * 관리자 전용 로그인 화면 출력
+     *
+     * @param rememberEmail 쿠키에 저장된 이메일
+     * @param model         모델 객체
+     * @return 논리적 뷰 이름
+     */
+    @GetMapping("/login")
+    public String adminLoginView(@CookieValue(value = "remember", required = false) String rememberEmail,
+                                 Model model) {
+        LoginForm loginForm = LoginForm.builder().build();
+
+        if (rememberEmail != null) {
+            loginForm.setEmail(rememberEmail);
+            loginForm.setRemember(true);
+        }
+
+        model.addAttribute("loginForm", loginForm);
+
+        return "common/member/adminLogin";
+    }
 
     /**
      * 관리자 대시보드 메인 화면 출력

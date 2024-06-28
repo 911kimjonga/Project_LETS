@@ -11,19 +11,36 @@
             <a th:href="@{/google/login}" href="#" class="social_bt google">Login with Google</a>
             <div class="divider"><span>Or</span></div>
             <form id="login_form">
-                <div class="form-group">
-                    <label for="email">이메일</label>
-                    <input th:value="${loginForm.email}" type="email" class="form-control " name="email" id="email"
-                           required>
-                    <i class="icon_mail_alt"></i>
-                    <div id="emailCheck" class="text-danger loginCheck"></div>
-                </div>
-                <div class="form-group">
-                    <label for="password">비밀번호</label>
-                    <input type="password" class="form-control" name="password" id="password" required>
-                    <i class="icon_lock_alt"></i>
-                    <div id="passwordCheck" class="text-danger loginCheck"></div>
-                </div>
+                <th:block th:if="${loginForm.email} == null or ${loginForm.email} == ''">
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input value="guest1@gmail.com" type="email" class="form-control " name="email" id="email"
+                               required>
+                        <i class="icon_mail_alt"></i>
+                        <div id="emailCheck" class="text-danger loginCheck"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input value="1111" type="password" class="form-control" name="password" id="password" required>
+                        <i class="icon_lock_alt"></i>
+                        <div id="passwordCheck" class="text-danger loginCheck"></div>
+                    </div>
+                </th:block>
+                <th:block th:if="${loginForm.email} != null">
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input th:value="${loginForm.email}" type="email" class="form-control " name="email" id="email"
+                               required>
+                        <i class="icon_mail_alt"></i>
+                        <div id="emailCheck" class="text-danger loginCheck"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input value="1111" type="password" class="form-control" name="password" id="password" required>
+                        <i class="icon_lock_alt"></i>
+                        <div id="passwordCheck" class="text-danger loginCheck"></div>
+                    </div>
+                </th:block>
                 <div class="clearfix add_bottom_15">
                     <div class="checkboxes float-start">
                         <label class="container_check">아이디 기억

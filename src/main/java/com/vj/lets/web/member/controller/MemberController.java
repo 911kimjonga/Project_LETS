@@ -98,7 +98,7 @@ public class MemberController {
     }
 
     /**
-     * 로그인 화면 출력
+     * 회원 로그인 화면 출력
      *
      * @param rememberEmail 쿠키에 저장된 이메일
      * @param model         모델 객체
@@ -271,10 +271,18 @@ public class MemberController {
      */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
         if (session != null) {
             session.invalidate();
         }
-        return "redirect:/";
+
+        if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
+            return "redirect:/admin/login";
+        } else {
+            return "redirect:/";
+        }
+
     }
 
 }
