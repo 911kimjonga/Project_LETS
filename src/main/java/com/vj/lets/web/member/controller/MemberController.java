@@ -279,6 +279,8 @@ public class MemberController {
 
         if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
             return "redirect:/admin/login";
+        } else if (loginMember.getType().equals(MemberType.HOST.getType())) {
+            return "redirect:/host/login";
         } else {
             return "redirect:/";
         }

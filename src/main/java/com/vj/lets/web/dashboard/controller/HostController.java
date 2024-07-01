@@ -7,6 +7,7 @@ import com.vj.lets.domain.cafe.dto.OptionListForm;
 import com.vj.lets.domain.cafe.service.CafeService;
 import com.vj.lets.domain.common.web.PageParams;
 import com.vj.lets.domain.common.web.Pagination;
+import com.vj.lets.domain.member.dto.LoginForm;
 import com.vj.lets.domain.member.dto.Member;
 import com.vj.lets.domain.reservation.dto.Reservation;
 import com.vj.lets.domain.reservation.service.ReservationService;
@@ -75,6 +76,28 @@ public class HostController {
     @Value("${room.imageDBPath}")
     private String imageDBPathRoom;
 
+    /**
+     * 호스트 전용 로그인 화면 출력
+     *
+     * @param rememberEmail 쿠키에 저장된 이메일
+     * @param model         모델 객체
+     * @return 논리적 뷰 이름
+     */
+    @GetMapping("/login")
+    public String hostLoginView(@CookieValue(value = "remember", required = false) String rememberEmail,
+                                 Model model) {
+        LoginForm loginForm = LoginForm.builder().build();
+
+        if (rememberEmail != null) {
+            loginForm.setEmail(rememberEmail);
+            loginForm.setRemember(true);
+        }
+
+        model.addAttribute("loginForm", loginForm);
+
+        return "common/member/hostLogin";
+    }
+    
     /**
      * 호스트 대시보드 메인 화면 출력
      *
