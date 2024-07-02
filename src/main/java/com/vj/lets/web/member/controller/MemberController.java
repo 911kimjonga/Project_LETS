@@ -151,9 +151,10 @@ public class MemberController {
                         HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
 
-        System.out.println("===================");
-        System.out.println(loginForm);
-        System.out.println("===================");
+        if (session != null) {
+            session.invalidate();
+            session = request.getSession();
+        }
 
         if (bindingResult.hasErrors()) {
             return "fail";
@@ -165,7 +166,13 @@ public class MemberController {
             return "fail";
         }
 
-        session.setAttribute("loginMember", loginMember);
+        if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
+            session.setAttribute("loginMemberAdmin", loginMember);
+        } else if (loginMember.getType().equals(MemberType.HOST.getType())) {
+            session.setAttribute("loginMemberHost", loginMember);
+        } else {
+            session.setAttribute("loginMember", loginMember);
+        }
 
         return "success";
     }
@@ -201,11 +208,6 @@ public class MemberController {
     public String naverLogin(@RequestParam String email, @RequestParam String name, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
 
-        System.out.println("====================");
-        System.out.println(email);
-        System.out.println(name);
-        System.out.println("====================");
-
         if (memberService.isMemberByEmail(email) == null) {
             Member member = Member.builder()
                     .email(email)
@@ -214,18 +216,10 @@ public class MemberController {
                     .type(MemberType.GUEST.getType())
                     .build();
 
-            System.out.println("====================");
-            System.out.println(member);
-            System.out.println("====================");
-
             memberService.register(member);
         }
 
         Member naverMember = memberService.isMemberByEmail(email);
-
-        System.out.println("====================");
-        System.out.println(naverMember);
-        System.out.println("====================");
 
         session.setAttribute("loginMember", naverMember);
 
@@ -337,18 +331,22 @@ public class MemberController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMemberAdmin = (Member) session.getAttribute("loginMemberAdmin");
+        Member loginMemberHost = (Member) session.getAttribute("loginMemberHost");
 
         if (session != null) {
             session.invalidate();
         }
 
-        if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
-            return "redirect:/admin/login";
-        } else if (loginMember.getType().equals(MemberType.HOST.getType())) {
-            return "redirect:/host/login";
-        } else {
+        if (loginMemberAdmin != null) {
+            return "redirect:/admin";
+        } else if (loginMemberHost != null) {
+            return "redirect:/host";
+        } else if (loginMember != null) {
             return "redirect:/";
         }
+
+        return "redirect:/";
 
     }
 

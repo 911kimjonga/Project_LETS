@@ -107,7 +107,7 @@ public class HostController {
     @GetMapping("")
     public String hostMain(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
         int cafeId = Integer.parseInt(cafe.get("id").toString());
@@ -135,7 +135,7 @@ public class HostController {
     @GetMapping("/cafe")
     public String cafeRegister(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         if (loginMember != null) {
             Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
@@ -177,7 +177,7 @@ public class HostController {
                              MultipartFile imagePath,
                              HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         if (loginMember != null) {
             Map<String, Object> cafes = cafeService.getCafeMemberId(loginMember.getId());
@@ -241,7 +241,7 @@ public class HostController {
     @GetMapping("/room")
     public String roomList(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         if (loginMember != null) {
             Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
@@ -337,7 +337,7 @@ public class HostController {
     public String roomRegist(@ModelAttribute Room roomRegist,
                              HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         if (loginMember != null) {
             Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
@@ -371,7 +371,7 @@ public class HostController {
                                   HttpServletRequest request,
                                   Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
         int cafeId = Integer.parseInt(cafe.get("id").toString());
@@ -417,7 +417,7 @@ public class HostController {
                                  HttpServletRequest request,
                                  Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
         int cafeId = Integer.parseInt(cafe.get("id").toString());
@@ -457,11 +457,11 @@ public class HostController {
      */
     @PostMapping("/reviews")
     @ResponseBody
-    public Object reviewRegist(@SessionAttribute Member loginMember, @RequestBody ReviewForm reviewForm, Model model) {
+    public Object reviewRegist(@SessionAttribute Member loginMemberHost, @RequestBody ReviewForm reviewForm, Model model) {
         Review review = Review.builder()
                 .content(reviewForm.getContent())
                 .reservationId(reviewForm.getReservationId())
-                .memberId(loginMember.getId())
+                .memberId(loginMemberHost.getId())
                 .build();
 
         reviewService.register(review);
@@ -499,7 +499,7 @@ public class HostController {
     @GetMapping("/stats")
     public String hostTotalData(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
         if (loginMember != null) {
             Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());

@@ -17,13 +17,13 @@
     <body class="fixed-nav sticky-footer" id="page-top">
 
     <!--/* 페이지 공통 네비게이션바 */-->
-    <th:block th:if="${session.loginMember.type == 'guest'}">
+    <th:block th:if="${session.loginMember != null && session.loginMember.type == 'guest'}">
         <th:block th:replace="~{dashboard/layout/fragments/member_mypage_nav :: nav}"></th:block>
     </th:block>
-    <th:block th:if="${session.loginMember.type == 'host'}">
+    <th:block th:if="${session.loginMemberHost != null && session.loginMemberHost.type == 'host'}">
         <th:block th:replace="~{dashboard/layout/fragments/host_dashboard_nav :: nav}"></th:block>
     </th:block>
-    <th:block th:if="${session.loginMember.type == 'admin'}">
+    <th:block th:if="${session.loginMemberAdmin != null && session.loginMemberAdmin.type == 'admin'}">
         <th:block th:replace="~{dashboard/layout/fragments/admin_dashboard_nav :: nav}"></th:block>
     </th:block>
 

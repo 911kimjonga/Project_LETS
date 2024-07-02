@@ -2,7 +2,6 @@ package com.vj.lets.web.home.controller;
 
 
 import com.vj.lets.domain.member.dto.Member;
-import com.vj.lets.domain.member.util.MemberType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -35,17 +34,17 @@ public class HomeController {
                        HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         Member loginMember = (Member) session.getAttribute("loginMember");
+        Member loginMemberAdmin = (Member) session.getAttribute("loginMemberAdmin");
+        Member loginMemberHost = (Member) session.getAttribute("loginMemberHost");
 
-        if (loginMember == null) {
-            return "index";
-        }
-
-        if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
+        if (loginMemberAdmin != null) {
             return "redirect:/admin";
-        } else if (loginMember.getType().equals(MemberType.HOST.getType())) {
+        } else if (loginMemberHost != null) {
             return "redirect:/host";
-        } else {
+        } else if (loginMember != null) {
             return "redirect:/cafe";
+        } else {
+            return "index";
         }
 
     }

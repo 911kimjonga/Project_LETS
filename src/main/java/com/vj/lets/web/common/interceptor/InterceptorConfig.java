@@ -22,11 +22,24 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     public final List<String> loginNotEssential = Arrays.asList("/", "/**/*.ttf", "/**/*.woff", "/**/*.mp4", "/**/*.png", "/**/*.jpg", "/**/*.ico", "/**/*.html",
             "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
-            "/member/register", "/member/login", "/admin/login", "/member/logout", "/member/google", "/member/callback", "/google/login", "/member/naver", "/cafe", "/cafe/*", "/group", "/contact", "/support/**", "/error");
+            "/member/register", "/member/login", "/admin/login", "/host/login", "/member/google", "/member/callback", "/google/login", "/member/naver", "/cafe", "/cafe/*", "/group", "/contact", "/support/**", "/error",
+            "/admin/**", "/host/**");
 
     public final List<String> loginModalNotEssential = Arrays.asList("/**/*.ttf", "/**/*.woff", "/**/*.mp4", "/**/*.png", "/**/*.jpg", "/**/*.ico", "/**/*.html",
             "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
             "/mypage/**", "/host/**", "/admin/**", "/member/login/**", "/member/register/**");
+
+    public final List<String> loginAdminEssential = Arrays.asList("/admin/**");
+
+    public final List<String> adminNotEssential = Arrays.asList("/", "/**/*.ttf", "/**/*.woff", "/**/*.mp4", "/**/*.png", "/**/*.jpg", "/**/*.ico", "/**/*.html",
+            "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
+            "/admin/login", "/host/login");
+
+    public final List<String> loginHostEssential = Arrays.asList("/host/**");
+
+    public final List<String> hostNotEssential = Arrays.asList("/", "/**/*.ttf", "/**/*.woff", "/**/*.mp4", "/**/*.png", "/**/*.jpg", "/**/*.ico", "/**/*.html",
+            "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
+            "/admin/login", "/host/login");
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -36,9 +49,19 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns(loginEssential)
                 .excludePathPatterns(loginNotEssential);
 
+        registry.addInterceptor(new AdminCheckInterceptor())
+                .order(2)
+                .addPathPatterns(loginAdminEssential)
+                .excludePathPatterns(adminNotEssential);
+
+        registry.addInterceptor(new HostCheckInterceptor())
+                .order(3)
+                .addPathPatterns(loginHostEssential)
+                .excludePathPatterns(hostNotEssential);
+
         // 로그인 모달 창 인터셉터 등록
         registry.addInterceptor(new LoginModalInterceptor())
-                .order(3)
+                .order(4)
                 .addPathPatterns(loginEssential)
                 .addPathPatterns(loginModalNotEssential);
     }
