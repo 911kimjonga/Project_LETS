@@ -66,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 이메일 중복 체크 조회 및 구글 로그인 시 회원 조회
+     * 이메일 중복 체크 조회 및 API 로그인 시 회원 조회
      *
      * @param email 이메일
      * @return 이메일로 조회한 회원 정보

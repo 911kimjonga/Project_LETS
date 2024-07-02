@@ -56,8 +56,7 @@ document.querySelector('form#login_form').addEventListener('submit', event => {
     }
 
     if ((emailCheck || email.value != null) && passwordCheck) {
-        console.log(email.value);
-        console.log(password.value);
+
         fetch('/member/login', {
             method: 'POST',
             headers: {
@@ -68,7 +67,6 @@ document.querySelector('form#login_form').addEventListener('submit', event => {
                 password: password.value,
             }),
         }).then(response => {
-
             return response.text();
         }).then(message => {
             if (message === 'success') {

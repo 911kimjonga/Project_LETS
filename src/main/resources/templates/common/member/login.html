@@ -4,10 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="LETS - 로그인">
+    <meta name="description" content="LETS - 회원 로그인">
     <meta name="author" content="김종원">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <title>LETS - 회원 로그인</title>
+
+    <!-- Google Login JS -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Naver Login JS -->
+    <script src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8" async defer></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js" async defer></script>
 
     <!-- COMMON LINK -->
     <th:block th:replace="~{common/layout/fragments/common_head :: head}"></th:block>
@@ -30,9 +37,12 @@
                 <img src="/images/title_textblack.svg" width="110" height="40" alt="" class="logo_sticky">
             </a>
         </figure>
+        <!-- Google Login Button -->
         <div class="access_social" style="text-align: center;">
             <a th:href="@{/google/login}" href="#0" class="social_bt google">Login with Google</a>
         </div>
+        <!-- 네이버 로그인 버튼 노출 영역 -->
+        <div id="naver_id_login"></div>
         <div class="divider"><span>Or</span></div>
         <form id="login_form">
             <div class="form-group">
@@ -69,6 +79,13 @@
 <script src="/js/common_scripts.js"></script>
 <script src="/js/main.js"></script>
 <script src="/js/custom/login.js"></script>
+<script src="/js/custom/naver_login.js"></script>
+<script type="text/javascript">
+    function handleLoginSuccess() {
+        location.href = "/";  // 메인 페이지로 이동
+    }
+</script>
+
 </body>
 
 </html>

@@ -105,6 +105,13 @@ mybatis:
 
 ---
 
+# 구글 로그인 관련 키 패스
+google:
+  json:
+    path: src/resource/main/client_secret.json
+
+---
+
 # 파일업로드 경로 설정
 common:
   uploadPath: C:/project/upload/

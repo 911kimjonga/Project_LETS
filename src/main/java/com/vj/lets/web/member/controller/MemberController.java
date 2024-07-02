@@ -5,6 +5,7 @@ import com.vj.lets.domain.member.dto.LoginForm;
 import com.vj.lets.domain.member.dto.Member;
 import com.vj.lets.domain.member.dto.RegisterForm;
 import com.vj.lets.domain.member.service.MemberService;
+import com.vj.lets.domain.member.util.DefaultPassword;
 import com.vj.lets.domain.member.util.MemberType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,7 +57,14 @@ public class MemberController {
      * @return 논리적 뷰 이름
      */
     @GetMapping("/register")
-    public String registerView(Model model) {
+    public String registerView(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        if (loginMember != null) {
+            return "index";
+        }
+
         RegisterForm registerForm = RegisterForm.builder().build();
 
         model.addAttribute("registerForm", registerForm);
@@ -77,6 +85,7 @@ public class MemberController {
     public Object register(@Validated @RequestBody RegisterForm registerForm,
                            BindingResult bindingResult,
                            Model model) {
+
         if (bindingResult.hasErrors()) {
             return "fail";
         }
@@ -106,7 +115,14 @@ public class MemberController {
      */
     @GetMapping("/login")
     public String loginView(@CookieValue(value = "remember", required = false) String rememberEmail,
-                            Model model) {
+                            HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        if (loginMember != null) {
+            return "index";
+        }
+
         LoginForm loginForm = LoginForm.builder().build();
 
         if (rememberEmail != null) {
@@ -134,6 +150,10 @@ public class MemberController {
                         BindingResult bindingResult,
                         HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
+
+        System.out.println("===================");
+        System.out.println(loginForm);
+        System.out.println("===================");
 
         if (bindingResult.hasErrors()) {
             return "fail";
@@ -165,6 +185,51 @@ public class MemberController {
         session.setAttribute("loginMember", loginMember);
 
         return "redirect:/";
+    }
+
+    /**
+     * 네이버 로그인 처리 기능
+     *
+     * @param email   네이버 이메일
+     * @param name    네이버 이름
+     * @param request 서블릿 리퀘스트 객체
+     * @param model   모델 객체
+     * @return 실행 후 반환 값
+     */
+    @PostMapping("/naver")
+    @ResponseBody
+    public String naverLogin(@RequestParam String email, @RequestParam String name, HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        System.out.println("====================");
+        System.out.println(email);
+        System.out.println(name);
+        System.out.println("====================");
+
+        if (memberService.isMemberByEmail(email) == null) {
+            Member member = Member.builder()
+                    .email(email)
+                    .name(name)
+                    .password(DefaultPassword.DEFAULT.getPassword())
+                    .type(MemberType.GUEST.getType())
+                    .build();
+
+            System.out.println("====================");
+            System.out.println(member);
+            System.out.println("====================");
+
+            memberService.register(member);
+        }
+
+        Member naverMember = memberService.isMemberByEmail(email);
+
+        System.out.println("====================");
+        System.out.println(naverMember);
+        System.out.println("====================");
+
+        session.setAttribute("loginMember", naverMember);
+
+        return "success";
     }
 
     /**

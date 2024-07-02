@@ -34,8 +34,8 @@ import java.util.Collection;
 @Service
 public class GoogleLoginService {
 
-//    private static final String CALLBACK_URI = "http://localhost/member/callback";
-    private static final String CALLBACK_URI = "http://lets.p-e.kr/member/callback";
+    private static final String CALLBACK_URI = "http://localhost/member/callback";
+//    private static final String CALLBACK_URI = "http://13.124.28.194/member/callback";
     private static final Collection<String> SCOPES = Arrays.asList("profile", "email");
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static HttpTransport httpTransport;
