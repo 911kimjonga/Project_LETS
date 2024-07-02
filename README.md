@@ -90,9 +90,201 @@ Lets는 Let's Easy Together Study의 약자로 스터디 카페 예약 서비스
 
 <br />
 
-### 📌 기능
+### 📌 구현 파트
 - #### 1️⃣ 회원 관련 기능 -@jongwon
 - #### 2️⃣ 스터디 카페 관련 기능 -@soyeong
 - #### 3️⃣ 예약 및 결제 관련 기능 -@sanghoon
 - #### 4️⃣ 스터디 그룹 관련 기능 -@heeyeong
 - #### 5️⃣ 게시글 관련 기능 -@hansol
+
+- <br /><br />
+
+## 📌 ERD
+:point_right: <a href="https://www.erdcloud.com/d/CohTeQ37JWA84SAy4" target="_blank">ERD 직접보러 가기</a> <br /><br />
+![ERD](https://github.com/Ezen-Lets/final_project_lets/assets/139057065/d5cf3699-bb71-425e-8f94-3e6f9879a68c)
+<br /><br />
+
+## 📌 기능상세
+### 1️⃣ 회원 관련 기능 -@jongwon
+- 회원 (Admin, Host, Guest)
+- 회원가입
+- 로그인, 구글 로그인 API, 네이버 로그인 API
+- 전체 회원 목록 조회
+- 특정 회원 정보 조회
+- 회원 정보 수정
+- 회원 탈퇴
+### 2️⃣ 스터디 카페 관련 기능 -@soyeong
+- 입점 허가 시 자동으로 입점 신청내용으로 카페 정보 등록
+- 카페 정보 수정
+- 카페 옵션 등록 및 수정, 삭제
+- 카페 검색
+### 3️⃣ 예약 및 결제 관련 기능 -@sanghoon
+- 예약 및 예약 취소
+- 예약 찾기
+- 예약 전체 목록 조회
+- 결제 등록
+- I'm port 결제 API
+### 4️⃣ 스터디 그룹 관련 기능 -@heeyeong
+- 스터디 그룸 생성 및 삭제
+- 스터디 그룹 전체 목록 조회
+- 스터디 그룹 조회
+- 스터디 그룹 정보 수정
+- 스터디 그룹 회원 추가, 삭제
+- 스터디 그룹 가입 신청 및 승인, 거절
+### 5️⃣ 게시글 관련 기능 -@hansol
+- 게시글 등록 및 삭제
+- 게시글 검색
+- 게시글 수정
+- 게시글 목록
+<br /><br />
+
+## 📌 API 명세
+<table>
+    <tr>
+        <td align="center">Domain</td>
+        <td align="center">URL</td>
+        <td align="center">Http Method</td>
+        <td align="center">description</td>
+        <td align="center">접근 권한</td>
+    </tr>
+    <tr>
+        <td>Member</td>
+        <td>/member/register</td>
+        <td><code>POST</code></td>
+        <td>회원가입</td>
+	<td>-</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/member/login</td>
+        <td><code>POST</code></td>
+        <td>로그인</td>
+	<td>-</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/member/edit</td>
+        <td><code>POST</code></td>
+        <td>회원정보수정</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/member/delete</td>
+        <td><code>DELETE</code></td>
+        <td>회원탈퇴</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td>Cafe</td>
+        <td>/cafe/list</td>
+        <td><code>GET</code></td>
+        <td>카페 전체 리스트</td>
+	<td>-</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/cafe/{id}</td>
+        <td><code>GET</code></td>
+        <td>카페 상세 페이지</td>
+	<td>-</td>
+    </tr>
+    <tr>
+        <td>Reservation</td>
+        <td>/reservation/{id}</td>
+        <td><code>GET</code></td>
+        <td>예약 정보 확인</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/reservation/{id}/payment</td>
+        <td><code>POST</code></td>
+        <td>I'm Port API 결제</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/cafe/{id}</td>
+        <td><code>POST</code></td>
+        <td>예약 생성</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td>Group</td>
+        <td>/group/</td>
+        <td><code>GET</code></td>
+        <td>스터디 전체 리스트</td>
+	<td>-</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/{id}</td>
+        <td><code>GET</code></td>
+        <td>스터디 상세보기</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/create</td>
+        <td><code>POST</code></td>
+        <td>스터디 생성</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/update/{id}</td>
+        <td><code>POST</code></td>
+        <td>스터디 정보 수정</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/delete/{id}</td>
+        <td><code>POST</code></td>
+        <td>스터디 삭제</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/join/{id}</td>
+        <td><code>POST</code></td>
+        <td>스터디 가입</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td>Article</td>
+        <td>/group/{id}/article</td>
+        <td><code>POST</code></td>
+        <td>게시글 등록</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/{id}/{articleId}/article/delete</td>
+        <td><code>POST</code></td>
+        <td>게시글 삭제</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/{id}/{articleId}/article/update</td>
+        <td><code>POST</code></td>
+        <td>게시글 수정</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/{id}/{articleId}/commentCreate</td>
+        <td><code>POST</code></td>
+        <td>댓글 등록</td>
+	<td>USER</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>/group/{id}/commentDelete</td>
+        <td><code>POST</code></td>
+        <td>댓글 삭제</td>
+	<td>USER</td>
+    </tr>
+</table>
