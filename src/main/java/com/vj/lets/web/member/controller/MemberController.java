@@ -339,9 +339,9 @@ public class MemberController {
         }
 
         if (loginMemberAdmin != null) {
-            return "redirect:/admin";
+            return "redirect:/admin/login";
         } else if (loginMemberHost != null) {
-            return "redirect:/host";
+            return "redirect:/host/login";
         } else if (loginMember != null) {
             return "redirect:/";
         }
