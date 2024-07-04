@@ -9,6 +9,11 @@ naver_id_login.setState(state);
 naver_id_login.setPopup();
 naver_id_login.init_naver_id_login();
 
+$(document).on("click", "#naver-custom", function () {
+    var btnNaverLogin = document.getElementById("naver_id_login").firstChild;
+    btnNaverLogin.click();
+})
+
 // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
 function naverSignInCallback() {
     let email = naver_id_login.getProfileData('email');
