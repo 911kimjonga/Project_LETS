@@ -1,9 +1,5 @@
 function emailValid(email) {
-<<<<<<< HEAD
     return /^[a-z0-9_-]{1,18}$/.test(email)
-=======
-    return /^[a-z0-9_-]$/.test(email)
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
 }
 
 function passwordValid(password) {
@@ -24,11 +20,7 @@ email.addEventListener('change', () => {
         checkMessage.innerHTML = '';
         return emailCheck;
     } else if (!emailCheck) {
-<<<<<<< HEAD
         checkMessage.innerHTML = '아이디 형식이 올바르지 않습니다.';
-=======
-        checkMessage.innerHTML = '이메일 형식이 올바르지 않습니다.';
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
     }
 })
 
@@ -50,39 +42,24 @@ document.querySelector('form#login_form').addEventListener('submit', event => {
     let checkMessageToPassword = document.querySelector('#passwordCheck');
     if (email.value != null) {
         if (emailValid(email.value)) {
-<<<<<<< HEAD
             checkMessageToEmail.innerHTML = '';
             emailCheck = true;
         } else {
             checkMessageToEmail.innerHTML = '아이디 형식이 올바르지 않습니다.';
-=======
-            emailCheck = true;
-        } else {
-            checkMessageToEmail.innerHTML = '이메일 형식이 올바르지 않습니다.';
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
         }
     }
     if (password.value != null) {
         if (passwordValid(password.value)) {
-<<<<<<< HEAD
             checkMessageToPassword.innerHTML = '';
-=======
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
             passwordCheck = true;
         } else {
             checkMessageToPassword.innerHTML = '비밀번호 형식이 올바르지 않습니다.';
         }
     }
 
-<<<<<<< HEAD
     if ((emailCheck && email.value != null) && passwordCheck) {
 
         fetch('/admin/login', {
-=======
-    if ((emailCheck || email.value != null) && passwordCheck) {
-
-        fetch('/member/login', {
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -131,8 +108,4 @@ function setCookie(cookieName, value, exdays) {
     exdate.setDate(exdate.getDate() + exdays);
     var cookieValue = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
     document.cookie = cookieName + "=" + cookieValue + "; path=/;";
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6

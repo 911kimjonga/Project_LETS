@@ -333,17 +333,6 @@ public class MemberController {
             session.invalidate();
         }
 
-<<<<<<< HEAD
-=======
-        if (loginMemberAdmin != null) {
-            return "redirect:/admin/login";
-        } else if (loginMemberHost != null) {
-            return "redirect:/host/login";
-        } else if (loginMember != null) {
-            return "redirect:/";
-        }
-
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
         return "redirect:/";
 
     }
