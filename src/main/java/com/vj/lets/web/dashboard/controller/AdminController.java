@@ -68,7 +68,7 @@ public class AdminController {
     }
 
     /**
-     * 회원 로그인 기능
+     * 관리자 전용 로그인 기능
      *
      * @param loginForm     로그인 폼 객체
      * @param bindingResult 바인딩 리절트 객체
