@@ -42,6 +42,7 @@ document.querySelector('form#login_form').addEventListener('submit', event => {
     let checkMessageToPassword = document.querySelector('#passwordCheck');
     if (email.value != null) {
         if (emailValid(email.value)) {
+            checkMessageToEmail.innerHTML = '';
             emailCheck = true;
         } else {
             checkMessageToEmail.innerHTML = '이메일 형식이 올바르지 않습니다.';
@@ -49,13 +50,14 @@ document.querySelector('form#login_form').addEventListener('submit', event => {
     }
     if (password.value != null) {
         if (passwordValid(password.value)) {
+            checkMessageToPassword.innerHTML = '';
             passwordCheck = true;
         } else {
             checkMessageToPassword.innerHTML = '비밀번호 형식이 올바르지 않습니다.';
         }
     }
 
-    if ((emailCheck || email.value != null) && passwordCheck) {
+    if ((emailCheck && email.value != null) && passwordCheck) {
 
         fetch('/member/login', {
             method: 'POST',

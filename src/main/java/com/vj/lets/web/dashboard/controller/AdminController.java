@@ -13,16 +13,20 @@ import com.vj.lets.domain.support.dto.*;
 import com.vj.lets.domain.support.service.ContactService;
 import com.vj.lets.domain.support.service.FaqService;
 import com.vj.lets.domain.support.util.ContactStatus;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * 관리자 대시보드 관련 요청 컨트롤러
+ * 관리자 관련 요청 컨트롤러
  *
  * @author VJ특공대 김종원
  * @version 1.0
@@ -60,7 +64,64 @@ public class AdminController {
 
         model.addAttribute("loginForm", loginForm);
 
-        return "common/member/adminLogin";
+        return "common/member/login_admin";
+    }
+
+    /**
+     * 회원 로그인 기능
+     *
+     * @param loginForm     로그인 폼 객체
+     * @param bindingResult 바인딩 리절트 객체
+     * @param request       서블릿 리퀘스트 객체
+     * @param model         모델 객체
+     * @return 실행 후 반환 값
+     */
+    @PostMapping("/login")
+    @ResponseBody
+    public String login(@Validated @RequestBody LoginForm loginForm,
+                        BindingResult bindingResult,
+                        HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        if (session != null) {
+            session.invalidate();
+            session = request.getSession();
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "fail";
+        }
+
+        Member loginMember = memberService.isMember(loginForm.getEmail(), loginForm.getPassword());
+        if (loginMember == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "fail";
+        }
+
+        if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
+            session.setAttribute("loginMemberAdmin", loginMember);
+            return "success";
+        } else {
+            return "fail";
+        }
+
+    }
+
+    /**
+     * 관리자 로그아웃 기능
+     *
+     * @param session 세션 객체
+     * @return 논리적 뷰 이름
+     */
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "redirect:/admin/login";
+
     }
 
     /**

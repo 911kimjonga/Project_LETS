@@ -7,7 +7,7 @@
 
     <insert id="create" parameterType="CafeOptionList">
         INSERT INTO CAFE_OPTION_LIST (ID, CAFE_ID, OPTION_ID)
-        VALUES (CAFE_OPTION_ID_SEQ.NEXTVAL, #{cafeId}, #{optionId})
+        VALUES (CAFE_OPTION_LIST_ID_SEQ.NEXTVAL, #{cafeId}, #{optionId})
     </insert>
 
     <select id="readAll" resultType="CafeOptionList">

@@ -6,8 +6,8 @@
 <mapper namespace="com.vj.lets.domain.room.mapper.RoomMapper">
 
     <insert id="create" parameterType="Room">
-        INSERT INTO ROOM(ID, NAME, DESCRIPTION, IMAGE_PATH, HEAD_COUNT, PRICE, CAFE_ID)
-        VALUES (ROOM_ID_SEQ.NEXTVAL, #{name}, #{description}, #{imagePath}, #{headCount},
+        INSERT INTO ROOM(ID, NAME, DESCRIPTION, HEAD_COUNT, PRICE, CAFE_ID)
+        VALUES (ROOM_ID_SEQ.NEXTVAL, #{name}, #{description}, #{headCount},
                 #{price}, #{cafeId})
     </insert>
 

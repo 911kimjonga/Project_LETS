@@ -136,7 +136,7 @@ public class MemberController {
     }
 
     /**
-     * 로그인 기능
+     * 회원 로그인 기능
      *
      * @param loginForm     로그인 폼 객체
      * @param bindingResult 바인딩 리절트 객체
@@ -166,15 +166,13 @@ public class MemberController {
             return "fail";
         }
 
-        if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
-            session.setAttribute("loginMemberAdmin", loginMember);
-        } else if (loginMember.getType().equals(MemberType.HOST.getType())) {
-            session.setAttribute("loginMemberHost", loginMember);
-        } else {
+        if (loginMember.getType().equals(MemberType.GUEST.getType())) {
             session.setAttribute("loginMember", loginMember);
+            return "success";
+        } else {
+            return "fail";
         }
 
-        return "success";
     }
 
     /**
@@ -323,21 +321,20 @@ public class MemberController {
     }
 
     /**
-     * 로그아웃 기능
+     * 회원 로그아웃 기능
      *
      * @param session 세션 객체
      * @return 논리적 뷰 이름
      */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        Member loginMember = (Member) session.getAttribute("loginMember");
-        Member loginMemberAdmin = (Member) session.getAttribute("loginMemberAdmin");
-        Member loginMemberHost = (Member) session.getAttribute("loginMemberHost");
 
         if (session != null) {
             session.invalidate();
         }
 
+<<<<<<< HEAD
+=======
         if (loginMemberAdmin != null) {
             return "redirect:/admin/login";
         } else if (loginMemberHost != null) {
@@ -346,6 +343,7 @@ public class MemberController {
             return "redirect:/";
         }
 
+>>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
         return "redirect:/";
 
     }

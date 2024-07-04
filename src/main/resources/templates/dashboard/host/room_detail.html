@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<th:block
+        th:replace="~{dashboard/layout/dashboard_layout :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
+
+    <th:block th:fragment="head">
+        <meta name="author" content="VJCommando">
+        <meta name="description" content="LETS - Host Dashboard">
+        <title>LETS - 호스트 - 룸 등록</title>
+
+        <link href="/dashboard/vendor/dropzone.css" rel="stylesheet">
+        <link href="/dashboard/vendor/animate.min.css" rel="stylesheet">
+        <link href="/dashboard/vendor/magnific-popup.css" rel="stylesheet">
+    </th:block>
+
+    <th:block th:fragment="content">
+        <!-- Content -->
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <!-- Breadcrumbs -->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/host}" href="/dashboard/host/host_dashboard.html">대시보드</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/host/room}" href="/dashboard/host/room_table.html">룸 등록 및 조회</a>
+                    </li>
+                    <li class="breadcrumb-item active"><a href="#">룸 상세 정보</a></li>
+                </ol>
+                <div class="box_general padding_bottom">
+                    <div class="header_box version_2">
+                        <h2><i class="fa fa-file"></i>룸 상세 정보</h2>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-12">
+                            <img th:if="${room.imagePath} == null" src="/upload_image/room/default_room.png"
+                                 style="max-width: 100%" alt="...">
+                            <img th:if="${room.imagePath} != null" th:src="${room.imagePath}"
+                                 src="/upload_image/cafe/default_cafe.png" style="max-width: 100%" alt="...">
+                        </div>
+                    </div>
+                    <!-- /row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>룸 이름</label>
+                            <p th:text="${room.name}"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>최대수용인원</label>
+                            <p th:text="${room.headCount}"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>시간당 가격</label>
+                            <p th:text="${#numbers.formatInteger(room.price, 3, 'COMMA') + '원'}"></p>
+                        </div>
+                    </div>
+                    <!-- /row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>룸 상세설명</label>
+                            <p th:text="${room.description}"></p>
+                        </div>
+                    </div>
+                    <!-- /row -->
+                </div>
+                <!-- /box_general -->
+                <div class="d-flex flex-row-reverse inline-popups">
+                    <a href="#modal-delete" class="btn_1 medium mx-1">삭제</a>
+                    <a href="#modal-edit" class="btn_1 medium mx-1">수정</a>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.container-wrapper -->
+        <!-- Edit to room popup -->
+        <div id="modal-edit" class="white-popup mfp-with-anim mfp-hide">
+            <form th:action="@{/host/room/{id}/edit(id=${room.id})}" th:object="${roomForm}" th:method="post"
+                  enctype="multipart/form-data">
+                <div class="small-dialog-header">
+                    <h3>룸 수정</h3>
+                </div>
+                <div class="form-group">
+                    <label>대표 이미지</label>
+                    <input th:id="imagePath" th:name="imagePath" type="file" class="real-upload form-control"
+                           name="imagePath" accept="image/*"><br>
+                </div>
+                <div class="form-group">
+                    <label th:for="name">룸이름</label>
+                    <input th:id="name" th:name="name" th:value="${room.name}"
+                           type="text" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label th:for="headCount">최대수용인원</label>
+                    <input th:id="headCount" th:name="headCount" th:value="${room.headCount}"
+                           type="number" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label th:for="price">시간당 가격</label>
+                    <input th:id="price" th:name="price" th:value="${room.price}"
+                           type="number" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label th:for="description">룸설명</label>
+                    <input th:id="description" th:name="description" th:value="${room.description}"
+                           type="text" class="form-control" required>
+                </div>
+                <button type="submit" class="btn_1 my-2">
+                    <i class="fa fa-fw fa-pencil mr-1"></i>
+                    룸 정보 수정
+                </button>
+            </form>
+        </div>
+
+        <!-- delete to member popup -->
+        <div id="modal-delete"
+             class="white-popup mfp-with-anim mfp-hide">
+            <div class="small-dialog-header">
+                <h3>룸 삭제</h3>
+            </div>
+            <div class="form-group message-reply margin-top-0">
+                <label th:for="password">비밀번호</label>
+                <input type="password" th:id="password" th:name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn_1 gray delete">
+                <i class="fa fa-fw fa-times-circle-o mr-1"></i>
+                룸 삭제
+            </button>
+        </div>
+        <!-- /Content -->
+    </th:block>
+
+    <th:block th:fragment="scripts">
+        <!-- Custom scripts for this page -->
+        <script src="/dashboard/vendor/dropzone.min.js"></script>
+        <!-- /custom scripts -->
+    </th:block>
+
+</th:block>
+
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<th:block
+        th:replace="~{dashboard/layout/dashboard_layout :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
+
+    <th:block th:fragment="head">
+        <meta name="author" content="VJCommando">
+        <meta name="description" content="LETS - Host Dashboard">
+        <title>LETS - 호스트 - 카페 정보</title>
+
+        <link href="/dashboard/vendor/dropzone.css" rel="stylesheet">
+        <link href="/dashboard/vendor/animate.min.css" rel="stylesheet">
+        <link href="/dashboard/vendor/magnific-popup.css" rel="stylesheet">
+    </th:block>
+
+    <th:block th:fragment="content">
+        <!-- Content -->
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <!-- Breadcrumbs -->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/host}" href="/dashboard/host/host_dashboard.html">대시보드</a>
+                    </li>
+                    <li class="breadcrumb-item active"><a href="#">카페 정보</a></li>
+                </ol>
+                <div class="box_general padding_bottom">
+                    <div class="header_box version_2">
+                        <h2><i class="fa fa-file"></i>카페 정보</h2>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-12">
+                            <img th:if="${cafe.get('imagePath')} == null" src="/upload_image/cafe/default_cafe.png"
+                                 style="max-width: 100%" alt="...">
+                            <img th:if="${cafe.get('imagePath')} != null" th:src="${cafe.imagePath}"
+                                 src="/upload_image/cafe/default_cafe.png" style="max-width: 100%" alt="...">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>호스트 이메일</label>
+                            <p th:text="${cafe.get('email')}"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>사업자번호</label>
+                            <p th:text="${cafe.get('businessNumber')}"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>카페 전화번호</label>
+                            <p th:if="${cafe.get('phoneNumber')}" th:text="${cafe.get('phoneNumber')}"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>운영시작시간</label>
+                            <p th:if="${cafe.get('startTime')}" th:text="|${cafe.get('startTime')}시|"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>운영종료시간</label>
+                            <p th:if="${cafe.get('endTime')}" th:text="|${cafe.get('endTime')}시|"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>카페 주소</label>
+                            <p th:if="${cafe.get('detailAddress')} != null"
+                               th:text="|${cafe.get('siDoName')} ${cafe.get('siGunGuName')} ${cafe.get('roadAddress')} ${cafe.get('detailAddress')}|"></p>
+                            <p th:unless="${cafe.get('detailAddress')} != null"
+                               th:text="|${cafe.get('siDoName')} ${cafe.get('siGunGuName')} ${cafe.get('roadAddress')}|"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>카페 설명</label>
+                            <p th:if="${cafe.get('description')}" th:text="${cafe.get('description')}"></p>
+                        </div>
+                    </div>
+                    <!-- /row -->
+                    <!-- /row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>카페 옵션</label>
+                            <ul th:if="${cafeOptions}" class="list-unstyled">
+                                <li th:each="cafeOption:${cafeOptions}">
+                                    <th:block><i th:class="|${cafeOption.imagePath} mr-2|"></i></th:block>
+                                    <th:block th:text="${cafeOption.name}"></th:block>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /row -->
+                </div>
+                <!-- /box_general -->
+
+            </div>
+            <!-- /box_general -->
+            <div class="d-flex flex-row-reverse inline-popups">
+                <a href="#modal_delete" class="btn_1 medium mx-1">탈퇴</a>
+                <a href="#modal-edit" class="btn_1 medium mx-1">수정</a>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+
+        <!-- Edit to cafe popup -->
+        <div id="modal-edit" class="white-popup mfp-with-anim mfp-hide">
+            <form th:action="@{/host/cafe/edit}" th:method="post" enctype="multipart/form-data">
+                <div class="small-dialog-header">
+                    <h3>카페 수정</h3>
+                </div>
+                <div class="form-group">
+                    <label>대표 이미지</label>
+                    <input th:id="imagePath" th:name="imagePath" type="file" class="real-upload form-control"
+                           name="imagePath" accept="image/*"><br>
+                </div>
+                <div class="form-group">
+                    <label th:for="name">카페이름</label>
+                    <input th:id="name" th:name="name" th:value="${cafe.get('name')}"
+                           type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:for="phoneNumber">전화번호</label>
+                    <input th:id="phoneNumber" th:name="phoneNumber" th:value="${cafe.get('phoneNumber')}"
+                           type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:for="address">주소</label>
+                    <input type="text" class="form-control" id="address_kakao_all"
+                           placeholder="주소"/>
+                    <button type="button" class="form-control btn_1 gray mt-2" id="address_kakao_btn"
+                            name="address">주소검색
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label th:for="phoneNumber">상세주소</label>
+                    <input type="text" class="form-control" name="detailAddress" th:value="${cafe.get('detailAddress')}"
+                           placeholder="상세 주소"/>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="address_kakao_do" name="siDoName"
+                           th:value="${cafe.get('siDoName')}"
+                           placeholder="ex. 서울특별시 또는 도(강원특별자치도)">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="address_kakao_gun" name="siGunGuName"
+                           th:value="${cafe.get('siGunGuName')}"
+                           placeholder="ex. 구(서초구) 또는 군(구례군)">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="address_kakao_detail" name="roadAddress"
+                           th:value="${cafe.get('roadAddress')}"
+                           placeholder="ex. 도로명 주소">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="lat" name="latitude"
+                           th:value="${cafe.get('latitude')}"
+                           placeholder="위도">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="lng" name="longitude"
+                           th:value="${cafe.get('longitude')}"
+                           placeholder="경도">
+                </div>
+                <div class="form-group">
+                    <label th:for="startTime">시작시간</label>
+                    <input th:id="startTime" th:name="startTime" th:value="${cafe.get('startTime')}"
+                           type="number" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:for="endTime">종료시간</label>
+                    <input th:id="endTime" th:name="endTime" th:value="${cafe.get('endTime')}"
+                           type="number" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:for="description">카페설명</label>
+                    <input th:id="description" th:name="description" th:value="${cafe.get('description')}"
+                           type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>카페옵션</label>
+                    <ul class="list-unstyled">
+                        <li th:each="option : ${optionListForms}">
+                            <label class="fix_spacing mr-2">
+                                <th:block><i th:class="|${option.imagePath} mr-2|"></i></th:block>
+                                <th:block th:text="${option.optionName}"></th:block>
+                            </label>
+                            <input type="checkbox" th:value="${option.optionId}" th:name="options"
+                                   th:checked="${option.optionCheck}">
+                        </li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="btn_1 my-2">
+                    <i class="fa fa-fw fa-pencil mr-1"></i>
+                    카페 정보 수정
+                </button>
+            </form>
+        </div>
+
+        <!-- delete to member popup -->
+        <div id="modal_delete"
+             class="white-popup mfp-with-anim mfp-hide modal_delete">
+            <div class="small-dialog-header">
+                <h3>회원 탈퇴</h3>
+            </div>
+            <div class="form-group message-reply margin-top-0">
+                <label for="deletePassword">비밀번호</label>
+                <input type="password" id="deletePassword" name="deletePassword" class="form-control deletePassword"
+                       required>
+            </div>
+            <button class="btn_1 gray delete delete_btn">
+                <i class="fa fa-fw fa-times-circle-o mr-1"></i>
+                회원 탈퇴
+            </button>
+        </div>
+
+
+        <!-- /Content -->
+    </th:block>
+
+    <th:block th:fragment="scripts">
+        <!-- Custom scripts for this page -->
+        <script src="/dashboard/vendor/dropzone.min.js"></script>
+        <!-- 카카오 지도 검색 API -->
+        <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script type="text/javascript"
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=665c870d0cd68fefbb228c9c40d58cf1&libraries=services"></script>
+        <script th:inline="javascript">
+            var geocoder = new kakao.maps.services.Geocoder();
+            window.onload = function () {
+                document.getElementById("address_kakao_btn").addEventListener("click", function () {
+                    // 카카오 지도 발생
+                    new daum.Postcode({
+                        oncomplete: function (data) {
+                            document.getElementById("address_kakao_all").value = data.address; // 전체 주소 넣기
+                            document.getElementById("address_kakao_gun").value = data.sigungu; // 군,구 넣기
+                            document.getElementById("address_kakao_do").value = data.sido; // 특별시,도 넣기
+                            const address = document.getElementById('address_kakao_all').value;
+                            const sido = document.getElementById('address_kakao_do').value;
+                            const sigungu = document.getElementById('address_kakao_gun').value;
+
+                            let newAddress = "";
+                            newAddress = address.replace(sido, '');
+                            newAddress = newAddress.replace(sigungu, '');
+                            newAddress = newAddress.trim();
+                            document.getElementById("address_kakao_detail").value = newAddress; // 도로명 주소 넣기
+                            document.querySelector("input[name=detailAddress]").focus(); // 상세입력 포커싱
+                            geocoder.addressSearch(data.address, callback);
+                        }
+                    }).open();
+                });
+            }
+            <!-- 카카오 지도 API 요청 -->
+            var callback = function (result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    document.querySelector('#lat').value = result[0].y;
+                    document.querySelector('#lng').value = result[0].x;
+                }
+            };
+        </script>
+        <script src="/dashboard/js/custom/mypage-dashboard_custom.js"></script>
+        <!-- /custom scripts -->
+    </th:block>
+
+</th:block>
+
+</html>

@@ -4723,7 +4723,7 @@ a.social_bt.facebook:before, a.social_bt.google:before, a.social_bt.linkedin:bef
   color: #fff;
 }
 a.social_bt.facebook {
-  background-color: #3B5998;
+  background-color: #03c75a;
 }
 a.social_bt.facebook:before {
   content: "\e093";
@@ -8850,7 +8850,7 @@ a.social_bt.linkedin:before {
 }
 
 a.social_bt.facebook {
-  background-color: #3B5998;
+  background-color: #03c75a;
 }
 a.social_bt.facebook:before {
   content: "\e093";

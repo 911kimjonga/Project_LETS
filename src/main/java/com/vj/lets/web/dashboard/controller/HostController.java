@@ -9,12 +9,15 @@ import com.vj.lets.domain.common.web.PageParams;
 import com.vj.lets.domain.common.web.Pagination;
 import com.vj.lets.domain.member.dto.LoginForm;
 import com.vj.lets.domain.member.dto.Member;
+import com.vj.lets.domain.member.service.MemberService;
+import com.vj.lets.domain.member.util.MemberType;
 import com.vj.lets.domain.reservation.dto.Reservation;
 import com.vj.lets.domain.reservation.service.ReservationService;
 import com.vj.lets.domain.review.dto.Review;
 import com.vj.lets.domain.review.dto.ReviewForm;
 import com.vj.lets.domain.review.service.ReviewService;
 import com.vj.lets.domain.room.dto.Room;
+import com.vj.lets.domain.room.dto.RoomEditForm;
 import com.vj.lets.domain.room.service.RoomService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +26,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 호스트 대시보드 관련 요청 컨트롤러
+ * 호스트 관련 요청 컨트롤러
  *
  * @author VJ특공대 김종원
  * @version 1.0
@@ -44,6 +49,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HostController {
 
+    private final MemberService memberService;
     private final CafeService cafeService;
     private final RoomService roomService;
     private final ReservationService reservationService;
@@ -95,7 +101,65 @@ public class HostController {
 
         model.addAttribute("loginForm", loginForm);
 
-        return "common/member/hostLogin";
+        return "common/member/login_host";
+    }
+
+    /**
+     * 호스트 전용 로그인 기능
+     *
+     * @param loginForm     로그인 폼 객체
+     * @param bindingResult 바인딩 리절트 객체
+     * @param request       서블릿 리퀘스트 객체
+     * @param model         모델 객체
+     * @return 실행 후 반환 값
+     */
+    @PostMapping("/login")
+    @ResponseBody
+    public String login(@Validated @RequestBody LoginForm loginForm,
+                        BindingResult bindingResult,
+                        HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        if (session != null) {
+            session.invalidate();
+            session = request.getSession();
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "fail";
+        }
+
+        Member loginMember = memberService.isMember(loginForm.getEmail(), loginForm.getPassword());
+
+        if (loginMember == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "fail";
+        }
+
+        if (loginMember.getType().equals(MemberType.HOST.getType())) {
+            session.setAttribute("loginMemberHost", loginMember);
+            return "success";
+        } else {
+            return "fail";
+        }
+
+    }
+
+    /**
+     * 호스트 로그아웃 기능
+     *
+     * @param session 세션 객체
+     * @return 논리적 뷰 이름
+     */
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "redirect:/host/login";
+
     }
     
     /**
@@ -159,7 +223,7 @@ public class HostController {
             model.addAttribute("optionListForms", optionListForms);
         }
 
-        return "dashboard/host/cafe_register";
+        return "dashboard/host/host_detail";
     }
 
     /**
@@ -220,7 +284,7 @@ public class HostController {
                 cafeRe.setImagePath(imagePathDB.toString());
             }
 
-            String comment = "host";
+            String comment = "update";
             String siGunGu = cafeEditForm.getSiGunGuName();
             String siDo = cafeEditForm.getSiDoName();
 
@@ -270,7 +334,39 @@ public class HostController {
         model.addAttribute("room", room);
         model.addAttribute("roomForm", roomForm);
 
-        return "dashboard/host/room_register";
+        return "dashboard/host/room_detail";
+    }
+
+    /**
+     * 새로운 룸 등록
+     *
+     * @param roomRegist 룸 등록 객체
+     * @param request    서블릿 리퀘스트 객체
+     * @param model      모댈 객체
+     * @return 논리적 뷰 이름
+     * @author VJ특공대 강소영
+     */
+    @PostMapping("/room/regist")
+    public String roomRegist(@ModelAttribute Room roomRegist,
+                             HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        Member loginMember = (Member) session.getAttribute("loginMemberHost");
+
+        if (loginMember != null) {
+            Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
+            int cafeId = Integer.parseInt(cafe.get("id").toString());
+            Room roomNew = Room.builder()
+                    .name(roomRegist.getName())
+                    .headCount(roomRegist.getHeadCount())
+                    .price(roomRegist.getPrice())
+                    .description(roomRegist.getDescription())
+                    .cafeId(cafeId)
+                    .build();
+
+            roomService.register(roomNew);
+        }
+
+        return "redirect:/host/room";
     }
 
     /**
@@ -286,7 +382,7 @@ public class HostController {
     @PostMapping("/room/{id}/edit")
     public String roomUpdate(@PathVariable String id,
                              MultipartFile imagePath,
-                             @ModelAttribute Room roomForm,
+                             @ModelAttribute RoomEditForm roomForm,
                              Model model) {
         Room editRoom = Room.builder()
                 .id(Integer.parseInt(id))
@@ -322,38 +418,6 @@ public class HostController {
         roomService.editRoom(editRoom);
 
         return "redirect:/host/room/{id}";
-    }
-
-    /**
-     * 새로운 룸 등록
-     *
-     * @param roomRegist 룸 등록 객체
-     * @param request    서블릿 리퀘스트 객체
-     * @param model      모댈 객체
-     * @return 논리적 뷰 이름
-     * @author VJ특공대 강소영
-     */
-    @PostMapping("/room/regist")
-    public String roomRegist(@ModelAttribute Room roomRegist,
-                             HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMemberHost");
-
-        if (loginMember != null) {
-            Map<String, Object> cafe = cafeService.getCafeMemberId(loginMember.getId());
-            int cafeId = Integer.parseInt(cafe.get("id").toString());
-            Room roomNew = Room.builder()
-                    .name(roomRegist.getName())
-                    .headCount(roomRegist.getHeadCount())
-                    .price(roomRegist.getPrice())
-                    .description(roomRegist.getDescription())
-                    .cafeId(cafeId)
-                    .build();
-
-            roomService.register(roomNew);
-        }
-
-        return "redirect:/host/room";
     }
 
     /**
@@ -508,6 +572,6 @@ public class HostController {
             model.addAttribute("reserveList", reserveList);
         }
 
-        return "dashboard/host/tables";
+        return "dashboard/host/booking_table";
     }
 }

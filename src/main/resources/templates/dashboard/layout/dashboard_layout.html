@@ -39,7 +39,15 @@
     </a>
 
     <!--/* 페이지 공통 로그아웃 팝업 */-->
-    <th:block th:replace="~{dashboard/layout/fragments/dashboard_logout-popup :: logout-popup}"></th:block>
+    <th:block th:if="${session.loginMember != null && session.loginMember.type == 'guest'}">
+        <th:block th:replace="~{dashboard/layout/fragments/member_mypage_logout-popup :: logout-popup}"></th:block>
+    </th:block>
+    <th:block th:if="${session.loginMemberHost != null && session.loginMemberHost.type == 'host'}">
+        <th:block th:replace="~{dashboard/layout/fragments/host_dashboard_logout-popup :: logout-popup}"></th:block>
+    </th:block>
+    <th:block th:if="${session.loginMemberAdmin != null && session.loginMemberAdmin.type == 'admin'}">
+        <th:block th:replace="~{dashboard/layout/fragments/admin_dashboard_logout-popup :: logout-popup}"></th:block>
+    </th:block>
 
     <!--/* 페이지 공통 스크립트 */-->
     <th:block th:replace="~{dashboard/layout/fragments/dashboard_scripts :: scripts}"></th:block>

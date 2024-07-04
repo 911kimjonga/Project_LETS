@@ -4,24 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="LETS - 회원 로그인">
+    <meta name="description" content="LETS - 관리자 로그인">
     <meta name="author" content="김종원">
-
-    <title>LETS - 회원 로그인</title>
-
-    <!-- Google Login JS -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-    <!-- Naver Login JS -->
-    <script src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8" async defer></script>
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js" async defer></script>
+    <title>LETS - 관리자 로그인</title>
 
     <!-- COMMON LINK -->
     <th:block th:replace="~{common/layout/fragments/common_head :: head}"></th:block>
     <link href="/css/custom/sign_page_custom.css" rel="stylesheet">
 </head>
 
-<body id="login_bg" style="background-image: url('/images/main.jpg')">
+<body id="login_bg" style="background-image: url('/images/admin_login.jpg')">
 
 <nav id="menu" class="fake_menu"></nav>
 
@@ -37,28 +30,14 @@
                 <img src="/images/title_textblack.svg" width="110" height="40" alt="" class="logo_sticky">
             </a>
         </figure>
-        <!-- Google Login Button -->
-        <div class="access_social" style="text-align: center;">
-            <a th:href="@{/google/login}" href="#0" class="social_bt google">Login with Google</a>
-        </div>
-        
-        <!-- 네이버 로그인 버튼 노출 영역 -->
-        <div id="naver_id_login" style="display: none"></div>
-        <div class="naver-login-custom">
-            <a id="naver-custom" href="#">
-                <img class="naver-custom-image" src="/images/login/naver.png" style="width: 100%; height: 100%; object-fit: cover;" />
-            </a>
-        </div>
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6
-        <div class="divider"><span>Or</span></div>
         <form id="login_form">
             <div class="form-group">
-                <label for="email">이메일</label>
-                <input value="guest1@gmail.com" type="email" id="email" name="email" class="form-control"
+                <label for="email">관리자 아이디</label>
+<<<<<<< HEAD:src/main/resources/templates/common/member/login_admin.html
+                <input value="admin1" type="text" id="email" name="email" class="form-control"
+=======
+                <input value="admin" type="text" id="email" name="email" class="form-control"
+>>>>>>> 03b3c70d72e6c7412828250db3e694d6a24bb4d6:src/main/resources/templates/common/member/adminLogin.html
                        required>
                 <i class="icon_mail_alt"></i>
                 <div id="emailCheck" class="text-danger loginCheck"></div>
@@ -71,7 +50,7 @@
             </div>
             <div class="clearfix add_bottom_30">
                 <div class="checkboxes float-start">
-                    <label for="remember" class="container_check">이메일 기억
+                    <label for="remember" class="container_check">아이디 기억
                         <input th:checked="${loginForm.remember}" type="checkbox" id="remember" name="remember">
                         <span class="checkmark"></span>
                     </label>
@@ -79,9 +58,6 @@
             </div>
             <input type="submit" class="btn_1 rounded full-width login_btn" value="로그인" readonly>
         </form>
-        <div class="text-center add_top_10">LETS 와 함께 하실까요? <strong><a th:href="@{/member/register}"
-                                                                       href="/register.html">회원가입</a></strong>
-        </div>
         <div class="copy">© LETS</div>
     </aside>
 </div>
@@ -89,14 +65,7 @@
 
 <script src="/js/common_scripts.js"></script>
 <script src="/js/main.js"></script>
-<script src="/js/custom/login.js"></script>
-<script src="/js/custom/naver_login.js"></script>
-<script type="text/javascript">
-    function handleLoginSuccess() {
-        location.href = "/";  // 메인 페이지로 이동
-    }
-</script>
-
+<script src="/js/custom/login_admin.js"></script>
 </body>
 
 </html>

@@ -224,10 +224,12 @@ public class CafeServiceImpl implements CafeService{
                     .build();
             cafeOptionLists.add(makeList);
         }
+
         if (siGunGu != null){
             int sggId = siGunGuMapper.getSiGunGuDo(siGunGu, siDo);
             cafe.setSiGunGuId(sggId);
         }
+
         cafeMapper.update(cafe);
         cafeHistoryMapper.update(comment, cafe.getId());
         cafeOptionListMapper.delete(cafe.getId());

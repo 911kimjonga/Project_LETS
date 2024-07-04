@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<th:block
+        th:replace="~{dashboard/layout/dashboard_layout :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
+
+    <th:block th:fragment="head">
+        <meta name="author" content="VJCommando">
+        <meta name="description" content="LETS - Host Dashboard">
+        <title>LETS - 호스트 - 종합 예약 정보</title>
+    </th:block>
+
+    <th:block th:fragment="content">
+        <!-- Content -->
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <!-- Breadcrumbs -->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/host}" href="/dashboard/host/host_dashboard.html">대시보드</a>
+                    </li>
+                    <li class="breadcrumb-item active"><a href="#">종합 예약 정보</a></li>
+                </ol>
+                <!-- Example DataTables Card -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-table"></i> 예약 종합 정보
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>예약자명</th>
+                                    <th>방 이름</th>
+                                    <th>예약 총원</th>
+                                    <th>예약일자</th>
+                                    <th>이용 시간</th>
+                                    <th>총액</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>예약자명</th>
+                                    <th>방 이름</th>
+                                    <th>예약 총원</th>
+                                    <th>예약일자</th>
+                                    <th>이용 시간</th>
+                                    <th>총액</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                <tr th:each="reserve : ${reserveList}">
+                                    <td th:text="${reserve.member_name}">박상훈</td>
+                                    <td th:text="${reserve.room_name}">A1</td>
+                                    <td th:text="${reserve.headCount}">1</td>
+                                    <td th:text="${reserve.booking_date}">2011/04/25</td>
+                                    <td th:text="${#strings.concat(reserve.startTime, ':00')+'~'+#strings.concat(reserve.endTime, ':00')}">
+                                        11:00~13:00
+                                    </td>
+                                    <td th:text="${#numbers.formatInteger(reserve.totalPrice, 3, 'COMMA') + '원'}">
+                                        30,000원
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer small text-muted"></div>
+                </div>
+                <!-- /tables -->
+            </div>
+            <!-- /container-fluid -->
+        </div>
+        <!-- /container-wrapper -->
+        <!-- /Content -->
+    </th:block>
+
+    <th:block th:fragment="scripts">
+        <!-- Custom scripts for this page -->
+        <script src="/dashboard/js/admin-datatables.js"></script>
+        <!-- /custom scripts -->
+    </th:block>
+
+</th:block>
+
+</html>

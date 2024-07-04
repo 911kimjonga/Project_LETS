@@ -7,7 +7,7 @@
     <th:block th:fragment="head">
         <meta name="author" content="VJCommando">
         <meta name="description" content="LETS - Host Dashboard">
-        <title>LETS - 호스트 대시보드 - 대시보드</title>
+        <title>LETS - 호스트 - 대시보드</title>
     </th:block>
 
     <th:block th:fragment="content">
@@ -19,7 +19,7 @@
                     <li class="breadcrumb-item">
                         <a th:href="@{/host}" href="/dashboard/host/host_dashboard.html">대시보드</a>
                     </li>
-                    <li class="breadcrumb-item active">대시보드</li>
+                    <li class="breadcrumb-item active"><a href="#">메인 페이지</a></li>
                 </ol>
                 <!-- Icon Cards -->
                 <div class="row">
@@ -100,11 +100,8 @@
             }
 
             let monthlySales = [[${monthlySales}]];
-            console.log(monthlySales);
             let monthlySalesKey = [];
-            console.log(monthlySalesKey);
             let monthlySalesValue = [];
-            console.log(monthlySalesValue);
             for (const countElement of monthlySales) {
                 monthlySalesKey.push(countElement.month);
                 monthlySalesValue.push(countElement.monthlyRevenue);
