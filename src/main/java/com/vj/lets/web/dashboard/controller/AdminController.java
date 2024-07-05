@@ -373,6 +373,8 @@ public class AdminController {
 
         List<Map<String, Object>> cafeList = cafeService.getCafeListForAdmin(pageParams);
 
+        System.out.println(cafeList);
+
         model.addAttribute("cafeList", cafeList);
         model.addAttribute("pagination", pagination);
 

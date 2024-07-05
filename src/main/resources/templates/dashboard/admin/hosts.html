@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <th:block
-        th:replace="~{dashboard/layout/dashboard_layout :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
+    th:replace="~{dashboard/layout/dashboard_layout :: setContent(~{this :: head} ,~{this :: content}, ~{this :: scripts})}">
 
     <th:block th:fragment="head">
         <meta name="author" content="VJCommando">
@@ -38,7 +38,8 @@
                     <div class="list_general">
                         <ul>
                             <li th:each="cafe : ${cafeList}">
-                                <figure><img th:src="${cafe.get('imagePath')}" src="/dashboard/img/item_1.jpg" alt="">
+                                <figure>
+                                    <img th:src="${cafe.get('imagePath')}" src="/dashboard/img/item_1.jpg" alt="...">
                                 </figure>
                                 <ul class="booking_list">
                                     <li><strong>상호명</strong>
@@ -46,7 +47,7 @@
                                     </li>
                                     <li><strong>주소</strong>
                                         <th:block
-                                                th:text="|${cafe.get('siDoName')} ${cafe.get('siGunGuName')} ${cafe.get('roadAddress')} ${cafe.get('detailAddress')}|">
+                                            th:text="|${cafe.get('siDoName')} ${cafe.get('siGunGuName')} ${cafe.get('roadAddress')} ${cafe.get('detailAddress')}|">
                                             가나다라카페
                                         </th:block>
                                     </li>
@@ -81,7 +82,7 @@
                                tabindex="-1"><i class="fa-solid fa-angles-left" style="color: #000000;"></i></a>
                         </li>
                         <th:block
-                                th:each="i : ${#numbers.sequence(pagination.getStartPage(), pagination.getEndPage())}">
+                            th:each="i : ${#numbers.sequence(pagination.getStartPage(), pagination.getEndPage())}">
                             <li th:if="${i == pagination.params.requestPage}" class="page-item active">
                                 <a th:text="${i}" class="page-link">1</a>
                             </li>

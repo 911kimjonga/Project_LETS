@@ -2,7 +2,7 @@
 // -- Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
-// -- Area Chart Example
+// 신규 회원 현황 선 그래프
 var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
@@ -52,7 +52,7 @@ var myLineChart = new Chart(ctx, {
     }
   }
 });
-// -- Bar Chart Example
+// 신규 입점 업체 수 막대그래프
 var ctx = document.getElementById("myBarChart");
 var myLineChart = new Chart(ctx, {
   type: 'bar',
@@ -94,7 +94,7 @@ var myLineChart = new Chart(ctx, {
     }
   }
 });
-// -- Pie Chart Example
+// 회원 성별 비율 원그래프
 var ctx = document.getElementById("myPieChart");
 var myPieChart = new Chart(ctx, {
   type: 'pie',
