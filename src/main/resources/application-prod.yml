@@ -81,8 +81,6 @@ spring:
   # MessageSource 설정
   messages:
     basename: messages,errors
-  profiles:
-    include:
 
 ---
 
