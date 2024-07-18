@@ -229,17 +229,16 @@
                                                     <!-- 수정 폼 -->
                                                     <input type="hidden" th:name="articleId"
                                                            th:value="${article['ID']}"/>
-
                                                     <label for="title" class="form-label">제목</label>
                                                     <input th:name="title" th:id="title" class="form-control mb-2"
                                                            id="title" name="title" type="text"
-                                                           th:value="${UpdateFormArticle.title}" required/>
+                                                           th:value="${article['TITLE']}" required/>
                                                     <label for="content" class="form-label">내용</label>
                                                     <textarea th:id="content" th:name="content"
                                                               class="form-control mb-2"
                                                               name="content" id="content" cols="30" rows="10"
                                                               style="height: 100px;"
-                                                              th:value="${UpdateFormArticle.content}"
+                                                              th:text="${article['CONTENT']}"
                                                               required>내용</textarea>
                                                     <div class="mb-3">
                                                         <ul class="image-preview"></ul>

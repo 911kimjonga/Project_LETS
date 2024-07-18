@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -534,7 +533,6 @@ public class StudyGroupController {
     /**
      * 게시글 수정
      *
-     * @param
      * @param model             model 인터페이스
      * @param articleUpdateForm 게시글 수정 객체
      * @param articleId         게시글 아이디
