@@ -59,30 +59,6 @@ public class HostController {
     private static final int PAGE_SIZE = 5;
 
     /**
-     * 실제 회원 이미지 경로
-     */
-    @Value("${cafe.imageLocation}")
-    private String imageLocationCafe;
-
-    /**
-     * DB에 입력할 회원 이미지 경로
-     */
-    @Value("${cafe.imageDBPath}")
-    private String imageDBPathCafe;
-
-    /**
-     * 실제 회원 이미지 경로
-     */
-    @Value("${room.imageLocation}")
-    private String imageLocationRoom;
-
-    /**
-     * DB에 입력할 회원 이미지 경로
-     */
-    @Value("${room.imageDBPath}")
-    private String imageDBPathRoom;
-
-    /**
      * 호스트 전용 로그인 화면 출력
      *
      * @param rememberEmail 쿠키에 저장된 이메일

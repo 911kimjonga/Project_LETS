@@ -60,7 +60,7 @@ logging:
 spring:
   #Database 연결 정보 설정
   config:
-    import: db-config-oracle.properties
+    import: db-config-mysql.properties
   # Thymeleaf 설정
   thymeleaf:
     prefix: classpath:/templates/
@@ -113,34 +113,5 @@ google:
     path: src/resource/main/client_secret.json
 
 ---
-
-# 파일업로드 경로 설정
-common:
-  uploadPath: C:/project/project_lets/upload/
-member:
-  imageLocation: C:/project/project_lets/upload_image/member/
-  imageDBPath: /image/member/
-  imageResourcePath: file:///C:/project/project_lets/upload_image/member/
-  imageUploadPath: /image/member/**
-cafe:
-  imageLocation: C:/project/project_lets/upload_image/cafe/
-  imageDBPath: /image/cafe/
-  imageResourcePath: file:///C:/project/project_lets/upload_image/cafe/
-  imageUploadPath: /image/cafe/**
-room:
-  imageLocation: C:/project/project_lets/upload_image/room/
-  imageDBPath: /image/room/
-  imageResourcePath: file:///C:/project/project_lets/upload_image/room/
-  imageUploadPath: /image/room/**
-group:
-  imageLocation: C:/project/project_lets/upload_image/group/
-  imageDBPath: /image/group/
-  imageResourcePath: file:///C:/project/project_lets/upload_image/group/
-  imageUploadPath: /image/group/**
-article:
-  imageLocation: C:/project/project_lets/upload_image/article/
-  imageDBPath: /image/article/
-  imageResourcePath: file:///C:/project/project_lets/upload_image/article/
-  imageUploadPath: /image/article/**
   
   

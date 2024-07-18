@@ -58,30 +58,6 @@ public class StudyGroupController {
     private final S3FileUpload s3FileUpload;
 
     /**
-     * 실제 회원 이미지 경로
-     */
-    @Value("${group.imageLocation}")
-    private String imageLocation;
-
-    /**
-     * DB에 입력할 회원 이미지 경로
-     */
-    @Value("${group.imageDBPath}")
-    private String imageDBPath;
-
-    /**
-     * 실제 게시글 이미지 경로
-     */
-    @Value("${article.imageLocation}")
-    private String articleImageLocation;
-
-    /**
-     * DB에 입력할 게시글 이미지 경로
-     */
-    @Value("${article.imageDBPath}")
-    private String articleImageDBPath;
-
-    /**
      * 스터디 전체 리스트 화면 출력
      *
      * @param page        페이지
@@ -364,7 +340,6 @@ public class StudyGroupController {
         StudyGroup studyGroup = StudyGroup.builder()
                 .name(createForm.getName())
                 .totalCount(createForm.getTotalCount())
-                .imagePath(imageDBPath + "default.png")
                 .subject(subject)
                 .build();
 
