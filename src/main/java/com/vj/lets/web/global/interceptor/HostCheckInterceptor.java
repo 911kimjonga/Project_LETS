@@ -1,4 +1,4 @@
-package com.vj.lets.web.common.interceptor;
+package com.vj.lets.web.global.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

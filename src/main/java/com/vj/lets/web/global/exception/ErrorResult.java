@@ -1,4 +1,4 @@
-package com.vj.lets.web.common.exception;
+package com.vj.lets.web.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

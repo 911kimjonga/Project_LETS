@@ -6,18 +6,18 @@
 <mapper namespace="com.vj.lets.domain.cafe.mapper.CafeOptionMapper">
 
     <insert id="create" parameterType="CafeOption">
-        INSERT INTO CAFE_OPTION (ID, NAME, IMAGE_PATH, DESCRIPTION)
-        VALUES (CAFE_OPTION_ID_SEQ.NEXTVAL, #{name}, #{imagePath}, #{description})
+        INSERT INTO CAFE_OPTION (NAME, IMAGE_PATH, DESCRIPTION)
+        VALUES (#{name}, #{imagePath}, #{description})
     </insert>
 
     <update id="update" parameterType="CafeOption">
-    UPDATE CAFE_OPTION
-    <set>
-        <if test="name != null and name != ''">NAME = #{name},</if>
-        <if test="imagePath != null and imagePath != ''">IMAGE_PATH = #{imagePath},</if>
-        <if test="description != null and description != ''">DESCRIPTION = #{description},</if>
-    </set>
-    WHERE ID = #{id}
+        UPDATE CAFE_OPTION
+        <set>
+            <if test="name != null">NAME = #{name},</if>
+            <if test="imagePath != null">IMAGE_PATH = #{imagePath},</if>
+            <if test="description != null">DESCRIPTION = #{description},</if>
+        </set>
+        WHERE ID = #{id}
     </update>
 
     <select id="readAll" resultType="CafeOption">

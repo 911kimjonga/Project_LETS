@@ -7,20 +7,18 @@ import com.vj.lets.domain.member.dto.RegisterForm;
 import com.vj.lets.domain.member.service.MemberService;
 import com.vj.lets.domain.member.util.DefaultPassword;
 import com.vj.lets.domain.member.util.MemberType;
+import com.vj.lets.web.global.infra.S3FileUpload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -37,18 +35,7 @@ import java.io.PrintWriter;
 public class MemberController {
 
     private final MemberService memberService;
-
-    /**
-     * 실제 회원 이미지 경로
-     */
-    @Value("${member.imageLocation}")
-    private String imageLocation;
-
-    /**
-     * DB에 입력할 회원 이미지 경로
-     */
-    @Value("${member.imageDBPath}")
-    private String imageDBPath;
+    private final S3FileUpload s3FileUpload;
 
     /**
      * 회원 가입 화면 출력
@@ -256,22 +243,8 @@ public class MemberController {
                     .build();
 
             if (!imagePath.isEmpty()) {
-                // 이미지 폴더에 저장
-                // 업로드 이미지 확장자 가져오기
-                String imageExtension = StringUtils.getFilenameExtension(imagePath.getOriginalFilename());
-                // 업로드 한 이미지 다운로드 받을 위치 설정
-                StringBuilder imageDir = new StringBuilder();
-                imageDir.append(imageLocation).append(loginMember.getId()).append(".").append(imageExtension);
-                File uploadDir = new File(imageDir.toString());
-                // 폴더 없으면 생성
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
-                imagePath.transferTo(uploadDir);
-
-                StringBuilder imagePathDB = new StringBuilder();
-                imagePathDB.append(imageDBPath).append(loginMember.getId()).append(".").append(imageExtension);
-                editMember.setImagePath(imagePathDB.toString());
+                String objectUrl = s3FileUpload.imageUpload(imagePath, this, editMember.getId());
+                editMember.setImagePath(objectUrl);
             }
 
             memberService.editMember(editMember);

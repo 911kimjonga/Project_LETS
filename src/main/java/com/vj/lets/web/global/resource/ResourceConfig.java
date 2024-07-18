@@ -1,4 +1,4 @@
-package com.vj.lets.web.common.resource;
+package com.vj.lets.web.global.resource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

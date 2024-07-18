@@ -27,6 +27,9 @@ public class PageParams {
     // 테이블 목록 갯수
     private int rowCount;
 
+    // 오프셋
+    private int offset;
+
     // 검색 타입
     private String type;
 

@@ -15,6 +15,7 @@ import com.vj.lets.domain.group.util.Pagination;
 import com.vj.lets.domain.location.service.SiGunGuService;
 import com.vj.lets.domain.member.dto.Member;
 import com.vj.lets.domain.member.service.MemberService;
+import com.vj.lets.web.global.infra.S3FileUpload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,17 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 스터디 그룹 컨트롤러
@@ -56,6 +54,8 @@ public class StudyGroupController {
 
     private final ArticleService articleService;
     private final ArticleCommentService articleCommentService;
+
+    private final S3FileUpload s3FileUpload;
 
     /**
      * 실제 회원 이미지 경로
@@ -110,6 +110,7 @@ public class StudyGroupController {
                 .pageSize(pageSize)
                 .requestPage(selectPage)
                 .rowCount(count)
+                .offset((elementSize * (selectPage - 1)))
                 .keyword(keyword)
                 .subject(subject)
                 .siGunGuName(siGunGuName)
@@ -178,6 +179,7 @@ public class StudyGroupController {
                 .pageSize(pageSize)
                 .requestPage(selectPage)
                 .rowCount(count)
+                .offset((elementSize * (selectPage - 1)))
                 .keyword(keyword)
                 .build();
 
@@ -186,6 +188,7 @@ public class StudyGroupController {
 
         List<Map<String, Object>> articleList = articleService.findByPage(pageParams, id);
         model.addAttribute("articleList", articleList);
+
         List<Integer> articleIds = new ArrayList<>();
         for (Map<String, Object> articleMap : articleList) {
             int articleId = Integer.parseInt(articleMap.get("ID").toString());
@@ -332,6 +335,7 @@ public class StudyGroupController {
                 .pageSize(pageSize)
                 .requestPage(selectPage)
                 .rowCount(count)
+                .offset((elementSize * (selectPage - 1)))
                 .build();
 
         List<Map<String, Object>> myStudyListAndPageParams = studyGroupService.getMyStudyListAndPageParams(loginMember.getId(), pageParams);
@@ -395,23 +399,8 @@ public class StudyGroupController {
                 .build();
 
         if (!settingImage.isEmpty()) {
-            // 이미지 폴더에 저장
-            // 업로드 이미지 확장자 가져오기
-            String imageExtension = StringUtils.getFilenameExtension(settingImage.getOriginalFilename());
-            // 업로드 한 이미지 다운로드 받을 위치 설정
-            StringBuilder imageDir = new StringBuilder();
-            imageDir.append(imageLocation).append(id).append(".").append(imageExtension);
-
-            File uploadDir = new File(imageDir.toString());
-            // 폴더 없으면 생성
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-            settingImage.transferTo(uploadDir);
-
-            StringBuilder imagePathDB = new StringBuilder();
-            imagePathDB.append(imageDBPath).append(id).append(".").append(imageExtension);
-            studyGroup.setImagePath(imagePathDB.toString());
+            String objectUrl = s3FileUpload.imageUpload(settingImage, this, studyGroup.getId());
+            studyGroup.setImagePath(objectUrl);
         } else {
             studyGroup.setImagePath("");
         }
@@ -519,27 +508,8 @@ public class StudyGroupController {
             if (imagePath == null) {
                 article.setImagePath(null);
             } else if (!imagePath.isEmpty()) {
-                // 이미지 폴더에 저장
-                // 업로드 이미지 확장자 가져오기
-                String imageExtension = StringUtils.getFilenameExtension(imagePath.getOriginalFilename());
-                // 업로드 한 이미지 다운로드 받을 위치 설정
-                StringBuilder imageDir = new StringBuilder();
-                UUID uuid = UUID.randomUUID();
-                StringBuilder stb = new StringBuilder();
-                stb.append(loginMember.getId()).append("_").append(uuid);
-                String uuidImagePath = stb.toString();
-                imageDir.append(articleImageLocation).append(uuidImagePath).append(".").append(imageExtension);
-
-                File uploadDir = new File(imageDir.toString());
-                // 폴더 없으면 생성
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
-                imagePath.transferTo(uploadDir);
-
-                StringBuilder imagePathDB = new StringBuilder();
-                imagePathDB.append(articleImageDBPath).append(uuidImagePath).append(".").append(imageExtension);
-                article.setImagePath(imagePathDB.toString());
+                String objectUrl = s3FileUpload.imageUpload(imagePath, this, id);
+                article.setImagePath(objectUrl);
             }
 
             articleService.create(article);
@@ -619,29 +589,8 @@ public class StudyGroupController {
             if (imagePath.isEmpty()) {
                 targetArticle.setImagePath("");
             } else if (!imagePath.isEmpty()) {
-                // 이미지 폴더에 저장
-                // 업로드 이미지 확장자 가져오기
-                String imageExtension = StringUtils.getFilenameExtension(imagePath.getOriginalFilename());
-                // 업로드 한 이미지 다운로드 받을 위치 설정
-                StringBuilder imageDir = new StringBuilder();
-                UUID uuid = UUID.randomUUID();
-                StringBuilder stb = new StringBuilder();
-                stb.append(loginMember.getId()).append("_").append(uuid);
-                String uuidImagePath = stb.toString();
-                imageDir.append(articleImageLocation).append(uuidImagePath).append(".").append(imageExtension);
-                log.info("타겟 {}", imageDir);
-                File uploadDir = new File(imageDir.toString());
-                // 폴더 없으면 생성
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
-                imagePath.transferTo(uploadDir);
-
-                StringBuilder imagePathDB = new StringBuilder();
-                imagePathDB.append(articleImageDBPath).append(uuidImagePath).append(".").append(imageExtension);
-                log.info("타겟 {}", imagePathDB);
-                targetArticle.setImagePath(imagePathDB.toString());
-                log.info("타겟 {}", targetArticle);
+                String objectUrl = s3FileUpload.imageUpload(imagePath, this, articleId);
+                targetArticle.setImagePath(objectUrl);
             }
             articleService.update(targetArticle);
 

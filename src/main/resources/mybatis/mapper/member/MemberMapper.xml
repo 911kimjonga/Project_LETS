@@ -6,88 +6,142 @@
 <mapper namespace="com.vj.lets.domain.member.mapper.MemberMapper">
 
     <insert id="create" parameterType="Member">
-        INSERT INTO MEMBER(ID, EMAIL, NAME, PASSWORD, TYPE)
-        VALUES (MEMBER_ID_SEQ.NEXTVAL, #{email}, #{name}, #{password}, #{type})
+        INSERT INTO MEMBER(
+                           EMAIL,
+                           NAME,
+                           PASSWORD,
+                           TYPE
+                           )
+        VALUES (
+                #{email},
+                #{name},
+                #{password},
+                #{type}
+               )
     </insert>
 
     <select id="readAll" resultType="Member">
-        SELECT ID,
-               EMAIL,
-               NAME,
-               PHONE_NUMBER,
-               BIRTHDAY,
-               GENDER,
-               TYPE,
-               TO_CHAR(regdate, 'yyyy-MM-dd') regdate,
-               IMAGE_PATH
-        FROM MEMBER
-        ORDER BY regdate DESC
+        SELECT
+            ID,
+            EMAIL,
+            NAME,
+            PHONE_NUMBER,
+            BIRTHDAY,
+            GENDER,
+            TYPE,
+            DATE_FORMAT(regdate, '%Y-%m-%d') AS regdate,
+            IMAGE_PATH
+        FROM
+            MEMBER
+        ORDER BY
+            regdate DESC
     </select>
 
     <select id="readByEmail" parameterType="string" resultType="Member">
-        select ID,
-               EMAIL,
-               NAME,
-               TYPE,
-               IMAGE_PATH
-        from MEMBER
-        where EMAIL = #{email}
-          AND STATUS = 'enabled'
+        SELECT
+            ID,
+            EMAIL,
+            NAME,
+            TYPE,
+            IMAGE_PATH
+        FROM
+            MEMBER
+        WHERE
+            EMAIL = #{email}
+          AND
+            STATUS = 'enabled'
     </select>
 
     <select id="readByEmailAndPassword" resultType="Member">
-        select ID,
-               EMAIL,
-               NAME,
-               TYPE,
-               IMAGE_PATH
-        from MEMBER
-        where EMAIL = #{email}
-          AND PASSWORD = #{password}
-          AND STATUS = 'enabled'
+        SELECT
+            ID,
+            EMAIL,
+            NAME,
+            TYPE,
+            IMAGE_PATH
+        FROM
+            MEMBER
+        WHERE
+            EMAIL = #{email}
+          AND
+            PASSWORD = #{password}
+          AND
+            STATUS = 'enabled'
     </select>
 
     <select id="readById" parameterType="int" resultType="Member">
-        SELECT ID,
-               EMAIL,
-               NAME,
-               PHONE_NUMBER,
-               BIRTHDAY,
-               GENDER,
-               TYPE,
-               TO_CHAR(regdate, 'yyyy-MM-dd HH24:MI:SS') regdate,
-               IMAGE_PATH
-        FROM MEMBER
-        WHERE id = #{id}
+        SELECT
+            ID,
+            EMAIL,
+            NAME,
+            PHONE_NUMBER,
+            BIRTHDAY,
+            GENDER,
+            TYPE,
+            DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s') AS regdate,
+            IMAGE_PATH
+        FROM
+            MEMBER
+        WHERE
+            id = #{id}
     </select>
 
     <select id="readCountByRegMonth" resultType="map">
-        SELECT "month",
-               COUNT(regdate) "memberCount"
-        FROM (SELECT TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM + 1), 'MM'), 'YYYY-MM') "month"
-              FROM DUAL CONNECT BY LEVEL &lt;= 12)
-                 LEFT JOIN MEMBER ON TO_CHAR(TRUNC(regdate, 'MM'), 'YYYY-MM') = "month"
-            AND MEMBER.TYPE = 'guest' AND MEMBER.STATUS = 'enabled'
-        GROUP BY "month"
-        ORDER BY "month"
+        WITH RECURSIVE
+            month_list
+            AS (
+                SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL seq - 1 MONTH), '%Y-%m') AS month
+                FROM (
+                    SELECT @rownum := @rownum + 1 AS seq
+                    FROM (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) t1,
+                         (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) t2,
+                         (SELECT @rownum := 0) r
+                ) seqs
+            LIMIT 12
+        )
+        SELECT
+            ml.month,
+            COUNT(m.regdate) AS memberCount
+        FROM
+            month_list ml
+        LEFT JOIN
+                MEMBER m ON DATE_FORMAT(m.regdate, '%Y-%m') = ml.month
+            AND
+                m.TYPE = 'guest'
+            AND
+                m.STATUS = 'enabled'
+        GROUP BY
+            ml.month
+        ORDER BY
+            ml.month;
     </select>
 
     <select id="readCountByGender" resultType="map">
-        SELECT GENDER "gender", COUNT(*) "count"
-        FROM MEMBER
-        WHERE STATUS = 'enabled'
-          AND MEMBER.TYPE = 'guest'
-        GROUP BY GENDER
+        SELECT
+            GENDER AS gender,
+            COUNT(*) AS count
+        FROM
+            MEMBER
+        WHERE
+            STATUS = 'enabled'
+          AND
+            TYPE = 'guest'
+        GROUP BY
+            GENDER
     </select>
 
     <select id="readCountByLastMonth" resultType="int">
-        SELECT COUNT(ID)
-        FROM MEMBER
-        WHERE REGDATE BETWEEN TO_DATE(ADD_MONTHS(SYSDATE, -1)) AND SYSDATE
+        SELECT
+            COUNT(ID)
+        FROM
+            MEMBER
+        WHERE
+            REGDATE BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE()
     </select>
 
     <update id="update" parameterType="Member">
-        UPDATE MEMBER
+        UPDATE
+            MEMBER
         <set>
             <if test="name != null and name != ''">NAME = #{name},</if>
             <if test="password != null and password != ''">PASSWORD = #{password},</if>
@@ -96,23 +150,30 @@
             <if test="gender != null and gender != ''">GENDER = #{gender},</if>
             <if test="imagePath != null and imagePath != ''">IMAGE_PATH = #{imagePath},</if>
         </set>
-        WHERE ID = #{id}
+        WHERE
+            ID = #{id}
     </update>
 
     <select id="readUpdateForm" parameterType="int" resultType="EditForm">
-        SELECT NAME,
-               PHONE_NUMBER,
-               BIRTHDAY,
-               GENDER,
-               IMAGE_PATH
-        FROM MEMBER
-        WHERE id = #{id}
+        SELECT
+            NAME,
+            PHONE_NUMBER,
+            BIRTHDAY,
+            GENDER,
+            IMAGE_PATH
+        FROM
+            MEMBER
+        WHERE
+            id = #{id}
     </select>
 
     <update id="disabled" parameterType="int">
-        UPDATE MEMBER
-        SET status = 'disabled'
-        WHERE ID = #{id}
+        UPDATE
+            MEMBER
+        SET
+            STATUS = 'disabled'
+        WHERE
+            ID = #{id}
     </update>
 
 </mapper>

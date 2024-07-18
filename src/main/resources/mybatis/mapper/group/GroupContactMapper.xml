@@ -6,24 +6,24 @@
 <mapper namespace="com.vj.lets.domain.group.mapper.GroupContactMapper">
 
     <insert id="contactGroup">
-        INSERT INTO GROUP_CONTACT(ID, MEMBER_ID, STUDY_GROUP_ID)
-        VALUES (GROUP_CONTACT_ID_SEQ.NEXTVAL, #{id}, #{studyGroupId})
+        INSERT INTO STUDY_GROUP_CONTACT(MEMBER_ID, STUDY_GROUP_ID)
+        VALUES (#{id}, #{studyGroupId})
     </insert>
 
     <select id="isAlreadyContact" resultType="GroupContact">
         SELECT ID
-        FROM GROUP_CONTACT
-        WHERE MEMBER_ID = #{id} AND STUDY_GROUP_ID = #{studyGroupId} AND STATUS != 'REFUSE'
+        FROM STUDY_GROUP_CONTACT
+        WHERE MEMBER_ID = #{id} AND STUDY_GROUP_ID = #{studyGroupId} AND STATUS != 'refuse'
     </select>
 
     <select id="findAllGroupContactList" parameterType="int">
-        SELECT GC.ID                             ID,
-               TO_CHAR(GC.REGDATE, 'yyyy-MM-dd') REGDATE,
-               M.NAME                            NAME,
-               M.GENDER                          GENDER,
-               M.BIRTHDAY                        BIRTHDAY,
-               M.ID                              MEMBERID
-        FROM GROUP_CONTACT GC
+        SELECT GC.ID                               AS ID,
+               DATE_FORMAT(GC.REGDATE, '%Y-%m-%d') AS REGDATE,
+               M.NAME                              AS NAME,
+               M.GENDER                            AS GENDER,
+               M.BIRTHDAY                          AS BIRTHDAY,
+               M.ID                                AS MEMBERID
+        FROM STUDY_GROUP_CONTACT GC
                  JOIN MEMBER M ON GC.MEMBER_ID = M.ID
         WHERE GC.STUDY_GROUP_ID = #{studyGroupId}
           AND GC.STATUS = 'hold'
@@ -32,20 +32,20 @@
     </select>
 
     <update id="approveGroupContact">
-        UPDATE GROUP_CONTACT
+        UPDATE STUDY_GROUP_CONTACT
         SET STATUS = 'approve'
         WHERE MEMBER_ID = #{id} AND STUDY_GROUP_ID = #{studyGroupId}
     </update>
 
     <update id="refuseGroupContact">
-        UPDATE GROUP_CONTACT
+        UPDATE STUDY_GROUP_CONTACT
         SET STATUS = 'refuse'
         WHERE MEMBER_ID = #{id} AND STUDY_GROUP_ID = #{studyGroupId}
     </update>
 
     <delete id="deleteContact">
         DELETE
-        FROM GROUP_CONTACT
+        FROM STUDY_GROUP_CONTACT
         WHERE MEMBER_ID = #{id}
           AND STUDY_GROUP_ID = #{studyGroupId}
     </delete>

@@ -6,40 +6,39 @@
 <mapper namespace="com.vj.lets.domain.group.mapper.GroupMemberListMapper">
 
     <insert id="createGroupMemberList" parameterType="int">
-        INSERT INTO GROUP_MEMBER_LIST(ID, POSITION, MEMBER_ID, STUDY_GROUP_ID)
-        VALUES (GROUP_MEMBER_LIST_ID_SEQ.NEXTVAL, '팀장', #{id}, STUDY_GROUP_ID_SEQ.CURRVAL)
+        INSERT INTO STUDY_GROUP_MEMBER_LIST(POSITION, MEMBER_ID, STUDY_GROUP_ID)
+        VALUES ('팀장', #{id}, LAST_INSERT_ID())
     </insert>
 
     <select id="findAllGroupMemberList" parameterType="int">
-        SELECT GML.ID ID,
-               GML.POSITION POSITION,
-               M.NAME NAME,
+        SELECT GML.ID             AS ID,
+               GML.POSITION       AS POSITION,
+               M.NAME             AS NAME,
                M.BIRTHDAY,
                M.GENDER,
-               GML.STUDY_GROUP_ID STUDYGROUPID,
-               M.ID MEMBERID
-        FROM GROUP_MEMBER_LIST GML
-            JOIN MEMBER M
-        ON GML.MEMBER_ID = M.ID
+               GML.STUDY_GROUP_ID AS STUDYGROUPID,
+               M.ID               AS MEMBERID
+        FROM STUDY_GROUP_MEMBER_LIST GML
+                 JOIN MEMBER M ON GML.MEMBER_ID = M.ID
         WHERE GML.STUDY_GROUP_ID = #{studyGroupId} AND M.STATUS = 'enabled'
         ORDER BY GML.POSITION DESC, M.NAME
     </select>
 
     <insert id="addMember">
-        INSERT INTO GROUP_MEMBER_LIST(ID, POSITION, MEMBER_ID, STUDY_GROUP_ID)
-        VALUES (GROUP_MEMBER_LIST_ID_SEQ.NEXTVAL, '팀원', #{id}, #{studyGroupId})
+        INSERT INTO STUDY_GROUP_MEMBER_LIST(ID, POSITION, MEMBER_ID, STUDY_GROUP_ID)
+        VALUES (NULL, '팀원', #{id}, #{studyGroupId})
     </insert>
 
     <delete id="removeMember">
         DELETE
-        FROM GROUP_MEMBER_LIST
+        FROM STUDY_GROUP_MEMBER_LIST
         WHERE MEMBER_ID = #{id}
           AND STUDY_GROUP_ID = #{studyGroupId}
     </delete>
 
     <delete id="removeAllMember">
         DELETE
-        FROM GROUP_MEMBER_LIST
+        FROM STUDY_GROUP_MEMBER_LIST
         WHERE STUDY_GROUP_ID = #{studyGroupId}
     </delete>
 
@@ -48,93 +47,70 @@
                POSITION,
                MEMBER_ID,
                STUDY_GROUP_ID
-        FROM GROUP_MEMBER_LIST
+        FROM STUDY_GROUP_MEMBER_LIST
         WHERE MEMBER_ID = #{memberId}
           AND STUDY_GROUP_ID = #{studyGroupId}
     </select>
 
     <select id="findMyGroupList" parameterType="int" resultType="map">
-        SELECT GML.ID             ID,
-               GML.POSITION       POSTITION,
-               GML.MEMBER_ID      MEMBERID,
-               GML.STUDY_GROUP_ID STUDYGROUPID,
-               SG.NAME            NAME,
-               SG.TOTAL_COUNT     TOTALCOUNT,
-               SG.CURRENT_COUNT   CURRENTCOUNT,
-               SG.SUBJECT         SUBJECT,
-               SG.IMAGE_PATH      IMAGEPATH,
-               SGG.NAME           SIGUNGUNAME
-        FROM GROUP_MEMBER_LIST GML
+        SELECT GML.ID             AS ID,
+               GML.POSITION       AS POSTITION,
+               GML.MEMBER_ID      AS MEMBERID,
+               GML.STUDY_GROUP_ID AS STUDYGROUPID,
+               SG.NAME            AS NAME,
+               SG.TOTAL_COUNT     AS TOTALCOUNT,
+               SG.CURRENT_COUNT   AS CURRENTCOUNT,
+               SG.SUBJECT         AS SUBJECT,
+               SG.IMAGE_PATH      AS IMAGEPATH,
+               SGG.NAME           AS SIGUNGUNAME
+        FROM STUDY_GROUP_MEMBER_LIST GML
                  JOIN STUDY_GROUP SG ON GML.STUDY_GROUP_ID = SG.ID
                  JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
-        WHERE MEMBER_ID = #{memberId} AND SG.STATUS = 'enabled'
+        WHERE GML.MEMBER_ID = #{memberId} AND SG.STATUS = 'enabled'
     </select>
 
     <select id="readGroupMemberCount" parameterType="int" resultType="boolean">
-        SELECT count(ID)
-        FROM GROUP_MEMBER_LIST
-        WHERE POSITION = '팀원' and STUDY_GROUP_ID = #{studyGroupId}
+        SELECT COUNT(ID)
+        FROM STUDY_GROUP_MEMBER_LIST
+        WHERE POSITION = '팀원' AND STUDY_GROUP_ID = #{studyGroupId}
     </select>
 
     <select id="readOldestMemberByGroupId" parameterType="int" resultType="int">
-        SELECT MIN(id) "id"
-        FROM GROUP_MEMBER_LIST
+        SELECT MIN(ID) AS id
+        FROM STUDY_GROUP_MEMBER_LIST
         WHERE POSITION = '팀원'
-          and STUDY_GROUP_ID = #{studyGroupId}
+          AND STUDY_GROUP_ID = #{studyGroupId}
     </select>
 
     <update id="updateMemberPosition">
-        UPDATE GROUP_MEMBER_LIST
-        <set>
-            POSITION = '팀장'
-        </set>
-        WHERE MEMBER_ID = #{memberId} and STUDY_GROUP_ID = #{studyGroupId}
+        UPDATE STUDY_GROUP_MEMBER_LIST
+        SET POSITION = '팀장'
+        WHERE MEMBER_ID = #{memberId} AND STUDY_GROUP_ID = #{studyGroupId}
     </update>
 
     <select id="myStudyCount" parameterType="int" resultType="int">
-        SELECT COUNT(ID) COUNT
-        FROM GROUP_MEMBER_LIST
+        SELECT COUNT(ID) AS COUNT
+        FROM STUDY_GROUP_MEMBER_LIST
         WHERE MEMBER_ID = #{id}
     </select>
 
     <select id="findMyGroupListAndPageParams" parameterType="int" resultType="map">
-        SELECT  ID,
-                POSTITION,
-                MEMBERID,
-                STUDYGROUPID,
-                NAME,
-                TOTALCOUNT,
-                CURRENTCOUNT,
-                SUBJECT,
-                IMAGEPATH,
-                SIGUNGUNAME
-        FROM (SELECT    ID,
-                        CEIL(rownum / #{pageParams.elementSize}) request_page,
-                        POSTITION,
-                        MEMBERID,
-                        STUDYGROUPID,
-                        NAME,
-                        TOTALCOUNT,
-                        CURRENTCOUNT,
-                        SUBJECT,
-                        IMAGEPATH,
-                        SIGUNGUNAME
-              FROM (SELECT    GML.ID             ID,
-                              GML.POSITION       POSTITION,
-                              GML.MEMBER_ID      MEMBERID,
-                              GML.STUDY_GROUP_ID STUDYGROUPID,
-                              SG.NAME            NAME,
-                              SG.TOTAL_COUNT     TOTALCOUNT,
-                              SG.CURRENT_COUNT   CURRENTCOUNT,
-                              SG.SUBJECT         SUBJECT,
-                              SG.IMAGE_PATH      IMAGEPATH,
-                              SGG.NAME           SIGUNGUNAME
-                    FROM GROUP_MEMBER_LIST GML
-                             JOIN STUDY_GROUP SG ON GML.STUDY_GROUP_ID = SG.ID
-                             JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
-                    WHERE MEMBER_ID = #{id} AND SG.STATUS = 'enabled'
-                    ORDER BY REGDATE DESC))
-        WHERE request_page = #{pageParams.requestPage}
+        SELECT  GML.ID             AS ID,
+                GML.POSITION       AS POSTITION,
+                GML.MEMBER_ID      AS MEMBERID,
+                GML.STUDY_GROUP_ID AS STUDYGROUPID,
+                SG.NAME            AS NAME,
+                SG.TOTAL_COUNT     AS TOTALCOUNT,
+                SG.CURRENT_COUNT   AS CURRENTCOUNT,
+                SG.SUBJECT         AS SUBJECT,
+                SG.IMAGE_PATH      AS IMAGEPATH,
+                SGG.NAME           AS SIGUNGUNAME
+        FROM STUDY_GROUP_MEMBER_LIST GML
+                 JOIN STUDY_GROUP SG ON GML.STUDY_GROUP_ID = SG.ID
+                 JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
+        WHERE MEMBER_ID = #{id} AND SG.STATUS = 'enabled'
+        ORDER BY REGDATE DESC
+        LIMIT #{pageParams.elementSize} OFFSET #{pageParams.offset}
     </select>
 
 </mapper>

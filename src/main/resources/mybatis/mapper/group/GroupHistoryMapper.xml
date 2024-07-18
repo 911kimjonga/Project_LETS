@@ -6,18 +6,18 @@
 <mapper namespace="com.vj.lets.domain.group.mapper.GroupHistoryMapper">
 
     <insert id="createGroupHistory">
-        INSERT INTO GROUP_HISTORY(ID, STUDY_GROUP_ID)
-        VALUES (GROUP_HISTORY_ID_SEQ.NEXTVAL, STUDY_GROUP_ID_SEQ.CURRVAL)
+        INSERT INTO STUDY_GROUP_HISTORY(STUDY_GROUP_ID)
+        VALUES (last_insert_id())
     </insert>
 
     <insert id="updateGroupHistory" parameterType="int">
-        INSERT INTO GROUP_HISTORY(ID, MODIFY_COMMENT, STUDY_GROUP_ID)
-        VALUES (GROUP_HISTORY_ID_SEQ.nextval, 'update', #{studyGroupId})
+        INSERT INTO STUDY_GROUP_HISTORY(MODIFY_COMMENT, STUDY_GROUP_ID)
+        VALUES ('update', #{studyGroupId})
     </insert>
 
     <insert id="deleteGroupHistory" parameterType="int">
-        INSERT INTO GROUP_HISTORY(ID, MODIFY_COMMENT, STUDY_GROUP_ID)
-        VALUES (GROUP_HISTORY_ID_SEQ.nextval, 'delete', #{studyGroupId})
+        INSERT INTO STUDY_GROUP_HISTORY(MODIFY_COMMENT, STUDY_GROUP_ID)
+        VALUES ('delete', #{studyGroupId})
     </insert>
 
 </mapper>

@@ -37,6 +37,8 @@ out/
 .vscode/
 
 ## Custom ###
-**/src/main/resources/db-config.properties
+**/src/main/resources/db-config-oracle.properties
+**/src/main/resources/db-config-mysql.properties
 log/
-src/main/resources/client_secret.json
+**/src/main/resources/client_secret.json
+**/src/main/resources/application-aws.yml

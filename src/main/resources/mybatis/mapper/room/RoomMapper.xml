@@ -6,8 +6,8 @@
 <mapper namespace="com.vj.lets.domain.room.mapper.RoomMapper">
 
     <insert id="create" parameterType="Room">
-        INSERT INTO ROOM(ID, NAME, DESCRIPTION, HEAD_COUNT, PRICE, CAFE_ID)
-        VALUES (ROOM_ID_SEQ.NEXTVAL, #{name}, #{description}, #{headCount},
+        INSERT INTO ROOM(NAME, DESCRIPTION, HEAD_COUNT, PRICE, CAFE_ID)
+        VALUES (#{name}, #{description}, #{headCount},
                 #{price}, #{cafeId})
     </insert>
 
@@ -17,8 +17,8 @@
             <if test="name != null and name != ''">NAME = #{name},</if>
             <if test="description != null and description != ''">DESCRIPTION = #{description},</if>
             <if test="imagePath != null and imagePath != ''">IMAGE_PATH = #{imagePath},</if>
-            <if test="headCount != null and headCount != ''">HEAD_COUNT = #{headCount},</if>
-            <if test="price != null and price != ''">PRICE = #{price},</if>
+            <if test="headCount != null">HEAD_COUNT = #{headCount},</if>
+            <if test="price != null">PRICE = #{price},</if>
         </set>
         WHERE ID = #{id}
     </update>
@@ -63,7 +63,6 @@
         FROM ROOM
         WHERE ID = #{id}
     </select>
-
 
     <update id="delete" parameterType="int">
         UPDATE ROOM

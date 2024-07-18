@@ -6,13 +6,17 @@
 <mapper namespace="com.vj.lets.domain.member.mapper.MemberHistoryMapper">
 
     <insert id="create">
-        INSERT INTO MEMBER_HISTORY(ID, MEMBER_ID)
-        VALUES (MEMBER_HISTORY_ID_SEQ.NEXTVAL, MEMBER_ID_SEQ.CURRVAL)
+        INSERT INTO
+            MEMBER_HISTORY(MEMBER_ID)
+        VALUES
+            (last_insert_id())
     </insert>
 
     <insert id="createByUpdate">
-        INSERT INTO MEMBER_HISTORY(ID, MODIFY_COMMENT, MEMBER_ID)
-        VALUES (MEMBER_HISTORY_ID_SEQ.NEXTVAL, #{comment}, #{memberId})
+        INSERT INTO
+            MEMBER_HISTORY(MODIFY_COMMENT, MEMBER_ID)
+        VALUES
+            (#{comment}, #{memberId})
     </insert>
 
 </mapper>

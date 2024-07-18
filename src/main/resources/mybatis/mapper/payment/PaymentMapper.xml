@@ -6,15 +6,14 @@
 <mapper namespace="com.vj.lets.domain.payment.mapper.PaymentMapper">
 
     <insert id="register" parameterType="Payment">
-        INSERT INTO PAYMENT (ID, PAY_STATUS, PAY_NAME, PAY_EMAIL, PAY_PHONE_NUMBER, RESERVATION_ID)
-        VALUES (PAYMENT_ID_SEQ.NEXTVAL, #{payStatus}, #{payName}, #{payEmail},
-                SUBSTR(#{payPhoneNumber}, 1, 3) || '-' || SUBSTR(#{payPhoneNumber}, 4, 4) || '-' ||
-                SUBSTR(#{payPhoneNumber}, 8),
+        INSERT INTO PAYMENT (PAY_STATUS, PAY_NAME, PAY_EMAIL, PAY_PHONE_NUMBER, RESERVATION_ID)
+        VALUES (#{payStatus}, #{payName}, #{payEmail},
+                CONCAT(SUBSTRING(#{payPhoneNumber}, 1, 3), '-', SUBSTRING(#{payPhoneNumber}, 4, 3), '-', SUBSTRING(#{payPhoneNumber}, 7)),
                 #{reservationId})
     </insert>
 
     <select id="checkAlreadyPayment" parameterType="int" resultType="int">
-        SELECT COUNT(p.RESERVATION_ID) "count"
+        SELECT COUNT(p.RESERVATION_ID) AS count
         FROM PAYMENT p
                  JOIN RESERVATION res ON p.RESERVATION_ID = res.ID
         WHERE p.RESERVATION_ID = #{reservationId}

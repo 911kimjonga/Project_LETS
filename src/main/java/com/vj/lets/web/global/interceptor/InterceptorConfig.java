@@ -1,4 +1,4 @@
-package com.vj.lets.web.common.interceptor;
+package com.vj.lets.web.global.interceptor;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

@@ -7,112 +7,126 @@
 
     <!-- 게시글 생성 -->
     <insert id="create" parameterType="Article">
-        INSERT INTO article(ID,
-                            TITLE,
-                            CONTENT,
-                            IMAGE_PATH,
-                            STUDY_GROUP_ID,
-                            MEMBER_ID)
-        VALUES (ARTICLE_ID_SEQ.NEXTVAL, #{title}, #{content}, #{imagePath, jdbcType=NULL}, #{studyGroupId}, #{memberId})
+        INSERT INTO ARTICLE (
+                             TITLE,
+                             CONTENT,
+                             IMAGE_PATH,
+                             STUDY_GROUP_ID,
+                             MEMBER_ID
+                            )
+        VALUES (
+                #{title},
+                #{content},
+                #{imagePath},
+                #{studyGroupId},
+                #{memberId}
+               )
     </insert>
 
     <!-- 게시글 수정 -->
     <update id="update" parameterType="Article">
-        UPDATE Article
+        UPDATE
+            ARTICLE
         <set>
-            <if test="title != null or title != ''">title = #{title},</if>
-            <if test="content != null or content != ''">content = #{content},</if>
-            <if test="imagePath != null or imagePath != ''">image_path = #{imagePath}</if>
+            <if test="title != null and title != ''">
+                TITLE = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                CONTENT = #{content},
+            </if>
+            <if test="imagePath != null and imagePath != ''">
+                IMAGE_PATH = #{imagePath}
+            </if>
         </set>
-        WHERE ID = #{id}
+        WHERE
+            ID = #{id}
     </update>
 
     <!-- 게시글 삭제 -->
     <update id="delete" parameterType="int">
-        UPDATE Article
-        SET status = 'disabled'
-        WHERE ID = #{articleId}
+        UPDATE
+            ARTICLE
+        SET
+            STATUS = 'disabled'
+        WHERE
+            ID = #{articleId}
     </update>
 
     <!-- 페이징 계산(검색값 포함)에 필요한 게시글 전체 갯수 -->
     <select id="getCountAll" resultType="int">
-        SELECT COUNT(a.id) AS "cnt"
-        FROM article a
-        JOIN MEMBER m ON a.MEMBER_ID = m.ID
-        JOIN STUDY_GROUP sg ON a.STUDY_GROUP_ID = sg.ID
-        <where>
-            a.STATUS = 'enabled' AND a.STUDY_GROUP_ID = #{groupId}
+        SELECT
+            COUNT(ID) AS cnt
+        FROM
+            ARTICLE
+        WHERE
+            STATUS = 'enabled'
+            AND
+            STUDY_GROUP_ID = #{groupId}
             <if test="keyword != null">
-                AND (
-                m.name LIKE '%' || #{keyword} || '%'
-                OR a.title LIKE '%' || #{keyword} || '%'
-                OR a.content LIKE '%' || #{keyword} || '%'
-                )
+                AND (MEMBER_ID IN (SELECT ID FROM MEMBER WHERE NAME LIKE CONCAT('%', #{keyword}, '%'))
+                OR TITLE LIKE CONCAT('%', #{keyword}, '%')
+                OR CONTENT LIKE CONCAT('%', #{keyword}, '%'))
             </if>
-        </where>
     </select>
 
     <!-- 게시글 목록 (페이징 처리 및 검색값 , 댓글 포함) -->
     <select id="findByPage" resultType="map">
-        SELECT id,
-               title,
-               content,
-               writer,
-               member_image_path MEMBERIMAGEPATH,
-               regdate,
-               image_path IMAGEPATH
-        FROM (SELECT id,
-                     CEIL(ROWNUM / #{pageParams.elementSize}) request_page,
-                     title,
-                     content,
-                     writer,
-                     member_image_path,
-                     regdate,
-                     image_path
-              FROM (SELECT a.ID                                     id,
-                           a.TITLE                                  title,
-                           a.CONTENT                                content,
-                           m.NAME                                   writer,
-                           m.IMAGE_PATH                             member_image_path,
-                           TO_CHAR(a.REGDATE, 'yyyy-MM-dd HH24:MI') regdate,
-                           a.IMAGE_PATH                             image_path
-                    FROM ARTICLE a
-                            JOIN MEMBER m ON a.MEMBER_ID = m.ID
-                    <where>
-                        a.STATUS = 'enabled' AND a.STUDY_GROUP_ID = #{groupId}
-                        <if test="pageParams.keyword != null">AND m.NAME LIKE '%' || #{pageParams.keyword} || '%'</if>
-                        <if test="pageParams.keyword != null">OR a.TITLE LIKE '%' || #{pageParams.keyword} || '%'</if>
-                        <if test="pageParams.keyword != null">OR a.CONTENT LIKE '%' || #{pageParams.keyword} || '%'</if>
-                    </where>
-                    ORDER BY a.REGDATE DESC))
-        WHERE request_page = #{pageParams.requestPage}
+        SELECT
+            a.ID                                     AS ID,
+            a.TITLE                                  AS TITLE,
+            a.CONTENT                                AS CONTENT,
+            m.NAME                                   AS WRITER,
+            m.IMAGE_PATH                             AS MEMBERIMAGEPATH,
+            DATE_FORMAT(a.REGDATE, '%Y-%m-%d %H:%i') AS REGDATE,
+            a.IMAGE_PATH                             AS IMAGEPATH
+        FROM
+            ARTICLE a
+                JOIN MEMBER m
+                    ON a.MEMBER_ID = m.ID
+        <where>
+            a.STATUS = 'enabled' AND a.STUDY_GROUP_ID = #{groupId}
+            <if test="pageParams.keyword != null">
+                AND m.NAME LIKE CONCAT('%', #{pageParams.keyword}, '%')
+                OR a.TITLE LIKE CONCAT('%', #{pageParams.keyword}, '%')
+                OR a.CONTENT LIKE CONCAT('%', #{pageParams.keyword}, '%')
+            </if>
+        </where>
+        ORDER BY
+            a.REGDATE DESC
     </select>
 
     <!-- 게시글 찾기 -->
     <select id="findById" parameterType="int" resultType="Article">
-        SELECT ID,
-               title,
-               content,
-               TO_CHAR(regdate, 'yyyy-MM-dd HH24:MI') regdate,
-               IMAGE_PATH,
-               STATUS,
-               MEMBER_ID,
-               STUDY_GROUP_ID
-        FROM ARTICLE
-        WHERE ID = #{id}
+        SELECT
+            ID,
+            TITLE,
+            CONTENT,
+            DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i') AS REGDATE,
+            IMAGE_PATH,
+            STATUS,
+            MEMBER_ID,
+            STUDY_GROUP_ID
+        FROM
+            ARTICLE
+        WHERE
+            ID = #{id}
     </select>
 
     <!--해당 게시글의 댓글 찾기-->
     <select id="findComment" resultType="map">
-        SELECT ac.ID,
-               ac.CONTENT,
-               TO_CHAR(ac.REGDATE, 'yyyy-MM-dd HH24:MI') commentRegDate,
-               m.NAME commentWriter,
-               a.ID articleId
-        FROM ARTICLE_COMMENT ac
-                JOIN ARTICLE a ON a.ID = ac.ARTICLE_ID
-                JOIN MEMBER m ON m.ID = ac.MEMBER_ID
-        <where>
+        SELECT
+            ac.ID,
+            ac.CONTENT,
+            DATE_FORMAT(ac.REGDATE, '%Y-%m-%d %H:%i') AS COMMENTREGDATE,
+            m.NAME AS COMMENTWRITER,
+            a.ID AS ARTICLEID
+        FROM
+            ARTICLE_COMMENT ac
+                JOIN ARTICLE a
+                    ON a.ID = ac.ARTICLE_ID
+                JOIN MEMBER m
+                    ON m.ID = ac.MEMBER_ID
+        WHERE
             ac.STATUS = 'enabled'
             <if test="list != null and list.size() > 0">
                 AND a.ID IN
@@ -120,34 +134,36 @@
                     #{articleId}
                 </foreach>
             </if>
-        </where>
-        ORDER BY ac.REGDATE ASC
+        ORDER BY
+            ac.REGDATE ASC
     </select>
 
     <!-- 최근 게시물 찾기-->
     <select id="getRecentArticles" resultType="Article">
-        SELECT ID,
-               TITLE,
-               IMAGE_PATH,
-               regdate
-        FROM (SELECT ID,
-                     TITLE,
-                     IMAGE_PATH,
-                     TO_CHAR(REGDATE, 'yyyy-MM-dd HH24:MI') regdate
-              FROM ARTICLE
-              WHERE STUDY_GROUP_ID = #{groupId}
-              ORDER BY REGDATE DESC)
-        WHERE <![CDATA[ ROWNUM <= 3]]>
+        SELECT
+            ID,
+            TITLE,
+            IMAGE_PATH,
+            DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i') AS regdate
+        FROM
+            ARTICLE
+        WHERE
+            STUDY_GROUP_ID = #{groupId}
+        ORDER BY
+            REGDATE DESC
+            LIMIT 3
     </select>
 
     <!-- 게시글 수정 시 수정 폼 찾기 -->
     <select id="readUpdateForm" parameterType="int" resultType="ArticleUpdateForm">
-        SELECT title,
-               content,
-               IMAGE_PATH
-        FROM ARTICLE
-        WHERE id = #{id}
+        SELECT
+            TITLE,
+            CONTENT,
+            IMAGE_PATH
+        FROM
+            ARTICLE
+        WHERE
+            ID = #{id}
     </select>
-
 
 </mapper>

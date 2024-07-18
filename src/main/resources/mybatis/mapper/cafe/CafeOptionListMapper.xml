@@ -6,8 +6,8 @@
 <mapper namespace="com.vj.lets.domain.cafe.mapper.CafeOptionListMapper">
 
     <insert id="create" parameterType="CafeOptionList">
-        INSERT INTO CAFE_OPTION_LIST (ID, CAFE_ID, OPTION_ID)
-        VALUES (CAFE_OPTION_LIST_ID_SEQ.NEXTVAL, #{cafeId}, #{optionId})
+        INSERT INTO CAFE_OPTION_LIST (CAFE_ID, OPTION_ID)
+        VALUES (#{cafeId}, #{optionId})
     </insert>
 
     <select id="readAll" resultType="CafeOptionList">
@@ -27,21 +27,23 @@
     </select>
 
     <select id="findByOptionCafeId" parameterType="int" resultType="CafeOption">
-        SELECT cop.NAME, cop.IMAGE_PATH
+        SELECT cop.NAME,
+               cop.IMAGE_PATH
         FROM CAFE_OPTION_LIST col
-                JOIN CAFE_OPTION cop ON col.OPTION_ID = cop.ID
-        WHERE CAFE_ID = #{cafeId}
+                 JOIN CAFE_OPTION cop ON col.OPTION_ID = cop.ID
+        WHERE col.CAFE_ID = #{cafeId}
     </select>
 
     <select id="findByOptionCheckCafeId" parameterType="int" resultType="boolean">
         SELECT COUNT(ID)
         FROM CAFE_OPTION_LIST
         WHERE CAFE_ID = #{cafeId}
-            AND OPTION_ID = #{optionId}
+          AND OPTION_ID = #{optionId}
     </select>
 
     <delete id="delete" parameterType="int">
-        DELETE FROM CAFE_OPTION_LIST
+        DELETE
+        FROM CAFE_OPTION_LIST
         WHERE CAFE_ID = #{cafeId}
     </delete>
 

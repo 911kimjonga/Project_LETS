@@ -6,8 +6,8 @@
 <mapper namespace="com.vj.lets.domain.group.mapper.StudyGroupMapper">
 
     <insert id="createStudy" parameterType="StudyGroup">
-        INSERT INTO STUDY_GROUP (ID, NAME, TOTAL_COUNT, SUBJECT, IMAGE_PATH, SI_GUN_GU_ID)
-        VALUES (STUDY_GROUP_ID_SEQ.NEXTVAL, #{name}, #{totalCount}, #{subject}, #{imagePath}, #{siGunGuId})
+        INSERT INTO STUDY_GROUP (NAME, TOTAL_COUNT, SUBJECT, IMAGE_PATH, SI_GUN_GU_ID)
+        VALUES (#{name}, #{totalCount}, #{subject}, #{imagePath}, #{siGunGuId})
     </insert>
 
     <select id="findByStudyId" resultType="int">
@@ -18,69 +18,54 @@
     <select id="studySearchCount" resultType="int">
         SELECT COUNT(SG.ID) COUNT
         FROM STUDY_GROUP SG
-                 JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
+        JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
         <where>
             SG.STATUS = 'enabled'
-            <if test="subject != null">AND SG.SUBJECT LIKE '%' || #{subject} || '%'</if>
-            <if test="keyword != null">AND SG.NAME LIKE '%' || #{keyword} || '%'</if>
-            <if test="keyword != null">OR SG.SUBJECT LIKE '%' || #{keyword} || '%'</if>
-            <if test="keyword != null">OR SGG.NAME LIKE '%' || #{keyword} || '%'</if>
+            <if test="subject != null">AND SG.SUBJECT LIKE CONCAT('%', #{subject}, '%')</if>
+            <if test="keyword != null">
+                AND (SG.NAME LIKE CONCAT('%', #{keyword}, '%')
+                OR SG.SUBJECT LIKE CONCAT('%', #{keyword}, '%')
+                OR SGG.NAME LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
         </where>
     </select>
 
     <select id="findAllStudyList" resultType="map">
-        SELECT  ID,
-                NAME,
-                TOTALCOUNT,
-                CURRENTCOUNT,
-                REGDATE,
-                IMAGEPATH,
-                SUBJECT,
-                SIGUNGUNAME
-        FROM (SELECT    ID,
-                        CEIL(rownum / #{elementSize}) request_page,
-                        NAME,
-                        TOTALCOUNT,
-                        CURRENTCOUNT,
-                        REGDATE,
-                        IMAGEPATH,
-                        SUBJECT,
-                        SIGUNGUNAME
-                FROM (SELECT    SG.ID ID,
-                                SG.NAME NAME,
-                                SG.TOTAL_COUNT TOTALCOUNT,
-                                SG.CURRENT_COUNT CURRENTCOUNT,
-                                SG.REGDATE REGDATE,
-                                SG.IMAGE_PATH IMAGEPATH,
-                                SG.SUBJECT SUBJECT,
-                                SGG.NAME SIGUNGUNAME
-                        FROM STUDY_GROUP SG
-                            JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
-                        <where>
-                            SG.STATUS = 'enabled'
-                            <if test="subject != null">AND SG.SUBJECT LIKE '%' || #{subject} || '%'</if>
-                            <if test="siGunGuName != null">AND SGG.NAME LIKE '%' || #{siGunGuName} || '%'</if>
-                            <if test="keyword != null">AND SG.NAME LIKE '%' || #{keyword} || '%'</if>
-                            <if test="keyword != null">OR SG.SUBJECT LIKE '%' || #{keyword} || '%'</if>
-                            <if test="keyword != null">OR SGG.NAME LIKE '%' || #{keyword} || '%'</if>
-                        </where>
-                        ORDER BY REGDATE DESC))
-        WHERE request_page = #{requestPage}
+        SELECT SG.ID             AS ID,
+               SG.NAME           AS NAME,
+               SG.TOTAL_COUNT    AS TOTALCOUNT,
+               SG.CURRENT_COUNT  AS CURRENTCOUNT,
+               SG.REGDATE        AS REGDATE,
+               SG.IMAGE_PATH     AS IMAGEPATH,
+               SG.SUBJECT        AS SUBJECT,
+               SGG.NAME          AS SIGUNGUNAME
+        FROM STUDY_GROUP SG
+            JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
+        <where>
+            SG.STATUS = 'enabled'
+            <if test="subject != null">AND SG.SUBJECT LIKE '%' || #{subject} || '%'</if>
+            <if test="siGunGuName != null">AND SGG.NAME LIKE '%' || #{siGunGuName} || '%'</if>
+            <if test="keyword != null">AND SG.NAME LIKE '%' || #{keyword} || '%'</if>
+            <if test="keyword != null">OR SG.SUBJECT LIKE '%' || #{keyword} || '%'</if>
+            <if test="keyword != null">OR SGG.NAME LIKE '%' || #{keyword} || '%'</if>
+        </where>
+        ORDER BY REGDATE DESC
+        LIMIT #{elementSize} OFFSET #{offset}
     </select>
 
     <select id="readStudy" parameterType="int" resultType="map">
-        SELECT SG.ID            ID,
-               SG.NAME          NAME,
-               SG.TOTAL_COUNT   TOTALCOUNT,
-               SG.CURRENT_COUNT CURRENTCOUNT,
-               SG.REGDATE       REGDATE,
-               SG.IMAGE_PATH    IMAGEPATH,
-               SG.SUBJECT       SUBJECT,
-               SGG.NAME         SIGUNGUNAME,
-               SD.NAME          SIDONAME,
-               M.NAME           MEMBERNAME
+        SELECT SG.ID            AS ID,
+               SG.NAME          AS NAME,
+               SG.TOTAL_COUNT   AS TOTALCOUNT,
+               SG.CURRENT_COUNT AS CURRENTCOUNT,
+               SG.REGDATE       AS REGDATE,
+               SG.IMAGE_PATH    AS IMAGEPATH,
+               SG.SUBJECT       AS SUBJECT,
+               SGG.NAME         AS SIGUNGUNAME,
+               SD.NAME          AS SIDONAME,
+               M.NAME           AS MEMBERNAME
         FROM STUDY_GROUP SG
-                 JOIN GROUP_MEMBER_LIST GML ON SG.ID = GML.STUDY_GROUP_ID
+                 JOIN STUDY_GROUP_MEMBER_LIST GML ON SG.ID = GML.STUDY_GROUP_ID
                  JOIN SI_GUN_GU SGG ON SG.SI_GUN_GU_ID = SGG.ID
                  JOIN SI_DO SD ON SGG.SI_DO_ID = SD.ID
                  JOIN MEMBER M ON M.ID = GML.MEMBER_ID
@@ -125,9 +110,9 @@
                REGDATE,
                IMAGEPATH
         FROM (SELECT ID, NAME, REGDATE, IMAGE_PATH IMAGEPATH
-                FROM STUDY_GROUP
-                WHERE STATUS = 'enabled'
-                ORDER BY REGDATE DESC)
-        WHERE <![CDATA[ ROWNUM <= 3 ]]>
+              FROM STUDY_GROUP
+              WHERE STATUS = 'enabled'
+              ORDER BY REGDATE DESC)
+        ORDERS LIMIT 3
     </select>
 </mapper>

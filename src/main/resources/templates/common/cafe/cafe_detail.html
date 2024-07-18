@@ -410,7 +410,7 @@
                                         <strong class="price-text"><span id="totalPrice">결제 가격</span><i
                                                 class="fa-solid fa-won-sign ms-1"></i></strong>
                                     </div>
-                                    <button type="submit" class=" add_top_30 btn_1 full-width purchase">바로 예약</button>
+                                    <button type="submit" class="add_top_30 btn_1 full-width purchase">바로 예약</button>
                                     <div class="text-center"><small>다음 과정에서 예약 확인 후 결제가 이루어 집니다.</small></div>
                                 </div>
                             </form>
@@ -427,6 +427,9 @@
 
     <th:block th:fragment="scripts">
         <script th:inline="javascript">
+            const today = new Date();
+            const formattedToday = today.toISOString().split('T')[0];
+
             const id = [[${Cafe['id']}]];
             const startTime = [[${Cafe['startTime']}]];
             const endTime = [[${Cafe['endTime']}]];
@@ -443,7 +446,9 @@
 
             let selectedStartTime = "";
             let availableEndTime = [];
-            let selectDate = "";
+            let selectDate = formattedToday;
+
+            console.log("선택 시간 : " + selectDate);
         </script>
         <!-- Map -->
         <script type="text/javascript"
@@ -493,7 +498,6 @@
         <!-- DATEPICKER  -->
         <script th:inline="javascript">
 
-
             //예약일 체크 달력
             $('input[name="bookingDate"]').daterangepicker({
                 autoUpdateInput: true,
@@ -507,7 +511,10 @@
                 }
             }, function (e, start) {
                 selectDate = start.format('YYYY-MM-DD');
+
                 const url = `/cafe/selectDate/${id}`;
+                console.log("선택 시간 : " + selectDate);
+                console.log("페치 url : " + url);
                 console.log(`${id}`);
                 fetch(url)
                     .then(response => response.json())
@@ -608,6 +615,9 @@
             }
 
             function availableStartTimes(array) {
+                console.log(array);
+                console.log(array);
+                console.log(array);
                 for (let i = 0; i < startTimes.length; i++) {
                     for (let j = 0; j < array.length; j += 2) {
                         if (startTimes[i] >= array[j] && startTimes[i] < array[j + 1]) {
@@ -693,6 +703,11 @@
                 });
             });
         </script>
+
+        <script>
+
+        </script>
+
         <!-- INPUT QUANTITY  -->
         <script src="/js/input_qty.js"></script>
 

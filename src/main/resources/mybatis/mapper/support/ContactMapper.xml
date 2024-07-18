@@ -6,13 +6,13 @@
 <mapper namespace="com.vj.lets.domain.support.mapper.ContactMapper">
 
     <insert id="create" parameterType="Contact">
-        INSERT INTO CONTACT(ID, EMAIL, NAME, CAFE_NAME, PHONE_NUMBER, ADDRESS, MESSAGE, BUSINESS_NUMBER)
-        VALUES (CONTACT_ID_SEQ.NEXTVAL, #{email}, #{name}, #{cafeName}, #{phoneNumber}, #{address}, #{message},
+        INSERT INTO CONTACT(EMAIL, NAME, CAFE_NAME, PHONE_NUMBER, ADDRESS, MESSAGE, BUSINESS_NUMBER)
+        VALUES (#{email}, #{name}, #{cafeName}, #{phoneNumber}, #{address}, #{message},
                 #{businessNumber})
     </insert>
 
     <select id="readCountAll" parameterType="string" resultType="int">
-        SELECT COUNT(ID) "count"
+        SELECT COUNT(ID) AS count
         FROM CONTACT
         <where>
             <if test="type != null and type != ''">AND STATUS = #{type}</if>
@@ -28,35 +28,14 @@
                ADDRESS,
                MESSAGE,
                BUSINESS_NUMBER,
-               TO_CHAR(CONTACT_DATE, 'yyyy-MM-dd') "contact_date",
+               DATE_FORMAT(CONTACT_DATE, '%Y-%m-%d') AS contact_date,
                STATUS
-        FROM (SELECT CEIL(ROWNUM / #{elementSize}) "request_page",
-                     ID,
-                     EMAIL,
-                     NAME,
-                     CAFE_NAME,
-                     PHONE_NUMBER,
-                     ADDRESS,
-                     MESSAGE,
-                     BUSINESS_NUMBER,
-                     CONTACT_DATE,
-                     STATUS
-              FROM (SELECT ID,
-                           EMAIL,
-                           NAME,
-                           CAFE_NAME,
-                           PHONE_NUMBER,
-                           ADDRESS,
-                           MESSAGE,
-                           BUSINESS_NUMBER,
-                           CONTACT_DATE,
-                           STATUS
-                    FROM CONTACT
-                    <where>
-                        <if test="type != null and type != ''">STATUS = #{type}</if>
-                    </where>
-                    ORDER BY CONTACT_DATE DESC))
-        WHERE "request_page" = #{requestPage}
+       FROM CONTACT
+       <where>
+           <if test="type != null and type != ''">STATUS = #{type}</if>
+       </where>
+       ORDER BY CONTACT_DATE DESC, ID
+       LIMIT #{elementSize} OFFSET #{offset}
     </select>
 
     <select id="readById" parameterType="int" resultType="Contact">
@@ -77,17 +56,16 @@
                BUSINESS_NUMBER,
                STATUS
         FROM CONTACT
-        WHERE (EMAIL = #{email} or BUSINESS_NUMBER = #{businessNumber})
-          AND (STATUS = 'hold' or STATUS = 'approve')
+        WHERE (EMAIL = #{email} OR BUSINESS_NUMBER = #{businessNumber})
+          AND (STATUS = 'hold' OR STATUS = 'approve')
     </select>
 
     <update id="update">
         UPDATE CONTACT
         <set>
-            <if test="status != null or status != ''">status = #{status},</if>
+            <if test="status != null and status != ''">STATUS = #{status},</if>
         </set>
         WHERE ID = #{id}
     </update>
-
 
 </mapper>

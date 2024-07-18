@@ -85,6 +85,7 @@ public class MypageController {
                 .pageSize(PAGE_SIZE)
                 .requestPage(selectPage)
                 .rowCount(count)
+                .offset((ELEMENT_SIZE * (selectPage - 1)))
                 .type(type)
                 .build();
         Pagination pagination = new Pagination(pageParams);
@@ -166,6 +167,7 @@ public class MypageController {
                 .pageSize(PAGE_SIZE)
                 .requestPage(selectPage)
                 .rowCount(count)
+                .offset((ELEMENT_SIZE * (selectPage - 1)))
                 .type(type)
                 .build();
         Pagination pagination = new Pagination(pageParams);

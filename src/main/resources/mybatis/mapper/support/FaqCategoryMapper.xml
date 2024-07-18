@@ -6,8 +6,8 @@
 <mapper namespace="com.vj.lets.domain.support.mapper.FaqCategoryMapper">
 
     <insert id="create" parameterType="FaqCategory">
-        INSERT INTO FAQ_CATEGORY(ID, NAME, DESCRIPTION)
-        VALUES (FAQ_CATEGORY_ID_SEQ.NEXTVAL, #{name}, #{description})
+        INSERT INTO FAQ_CATEGORY(NAME, DESCRIPTION)
+        VALUES (#{name}, #{description})
     </insert>
 
     <select id="readAll" resultType="FaqCategory">
@@ -22,16 +22,16 @@
                NAME,
                DESCRIPTION
         FROM FAQ_CATEGORY
-        WHERE NAME LIKE '%' || '카페' || '%'
-           OR NAME LIKE '%' || '예약' || '%'
-           OR NAME LIKE '%' || '결제' || '%'
+        WHERE NAME LIKE CONCAT('%', '카페', '%')
+           OR NAME LIKE CONCAT('%', '예약', '%')
+           OR NAME LIKE CONCAT('%', '결제', '%')
     </select>
 
     <update id="update" parameterType="FaqCategory">
         UPDATE FAQ_CATEGORY
         <set>
-            <if test="name != null or name != ''">name = #{name},</if>
-            <if test="description != null or description != ''">description = #{description},</if>
+            <if test="name != null and name != ''">NAME = #{name},</if>
+            <if test="description != null and description != ''">DESCRIPTION = #{description},</if>
         </set>
         WHERE ID = #{id}
     </update>
@@ -41,6 +41,5 @@
         FROM FAQ_CATEGORY
         WHERE ID = #{id}
     </delete>
-
 
 </mapper>

@@ -6,18 +6,18 @@
 <mapper namespace="com.vj.lets.domain.room.mapper.RoomHistoryMapper">
 
     <insert id="create">
-        INSERT INTO ROOM_HISTORY(ID, ROOM_ID)
-        VALUES (ROOM_HISTORY_ID_SEQ.NEXTVAL, ROOM_ID_SEQ.CURRVAL)
+        INSERT INTO ROOM_HISTORY(ROOM_ID)
+        VALUES (last_insert_id())
     </insert>
 
     <insert id="update" parameterType="int">
-        INSERT INTO ROOM_HISTORY(ID, MODIFY_COMMENT, ROOM_ID)
-        VALUES(ROOM_HISTORY_ID_SEQ.NEXTVAL, 'update', #{roomId})
+        INSERT INTO ROOM_HISTORY(MODIFY_COMMENT, ROOM_ID)
+        VALUES('update', #{roomId})
     </insert>
 
     <insert id="delete" parameterType="int">
-        INSERT INTO ROOM_HISTORY(ID, MODIFY_COMMENT, ROOM_ID)
-        VALUES(ROOM_HISTORY_ID_SEQ.NEXTVAL, 'delete', #{roomId})
+        INSERT INTO ROOM_HISTORY(MODIFY_COMMENT, ROOM_ID)
+        VALUES('delete', #{roomId})
     </insert>
 
 </mapper>

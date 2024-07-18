@@ -6,13 +6,13 @@
 <mapper namespace="com.vj.lets.domain.review.mapper.ReviewHistoryMapper">
 
     <insert id="create">
-        INSERT INTO REVIEW_HISTORY(ID, REVIEW_ID)
-        VALUES (REVIEW_HISTORY_ID_SEQ.NEXTVAL, REVIEW_ID_SEQ.CURRVAL)
+        INSERT INTO REVIEW_HISTORY(REVIEW_ID)
+        VALUES (last_insert_id())
     </insert>
 
     <insert id="createByUpdate">
-        INSERT INTO REVIEW_HISTORY(ID, MODIFY_COMMENT, REVIEW_ID)
-        VALUES(REVIEW_HISTORY_ID_SEQ.NEXTVAL, #{comment}, #{reviewId})
+        INSERT INTO REVIEW_HISTORY(MODIFY_COMMENT, REVIEW_ID)
+        VALUES(#{comment}, #{reviewId})
     </insert>
 
 </mapper>

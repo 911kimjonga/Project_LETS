@@ -6,42 +6,32 @@
 <mapper namespace="com.vj.lets.domain.support.mapper.FaqMapper">
 
     <insert id="create" parameterType="Faq">
-        INSERT INTO FAQ(ID, TITLE, CONTENT, CATEGORY_ID)
-        VALUES (FAQ_ID_SEQ.NEXTVAL, #{title}, #{content}, #{categoryId})
+        INSERT INTO FAQ(TITLE, CONTENT, CATEGORY_ID)
+        VALUES (#{title}, #{content}, #{categoryId})
     </insert>
 
     <select id="readCountAll" parameterType="string" resultType="int">
-        SELECT COUNT(f.ID) "count"
+        SELECT COUNT(f.ID) AS count
         FROM FAQ f
-            JOIN FAQ_CATEGORY c ON f.CATEGORY_ID = c.ID
+        JOIN FAQ_CATEGORY c ON f.CATEGORY_ID = c.ID
         <where>
-            <if test="type != null and type != '' and type != 'all'">AND c.NAME = #{type}</if>
+            <if test="type != null and type != '' and type != 'all'">c.NAME = #{type}</if>
         </where>
     </select>
 
     <select id="readAll" parameterType="PageParams" resultType="map">
-        SELECT "id",
-               "title",
-               "content",
-               "category"
-        FROM (SELECT CEIL(ROWNUM / #{elementSize}) "request_page",
-                     "id",
-                     "title",
-                     "content",
-                     "category"
-              FROM (SELECT f.ID    "id",
-                           TITLE   "title",
-                           CONTENT "content",
-                           c.NAME  "category"
-                    FROM FAQ f
-                             JOIN FAQ_CATEGORY c ON f.CATEGORY_ID = c.ID
-                    <where>
-                       <if test="type != null and type != '' and type != 'all'">c.NAME = #{type}</if>
-                    </where>
-                    ORDER BY CATEGORY_ID))
-        WHERE "request_page" = #{requestPage}
+        SELECT f.ID    AS id,
+               TITLE   AS title,
+               CONTENT AS content,
+               c.NAME  AS category
+        FROM FAQ f
+             JOIN FAQ_CATEGORY c ON f.CATEGORY_ID = c.ID
+        <where>
+            <if test="type != null and type != '' and type != 'all'">c.NAME = #{type}</if>
+        </where>
+        ORDER BY CATEGORY_ID
+        LIMIT #{elementSize} OFFSET #{offset}
     </select>
-
 
     <select id="readByCategory" parameterType="int" resultType="Faq">
         SELECT ID,
@@ -67,6 +57,5 @@
         FROM FAQ
         WHERE ID = #{id}
     </delete>
-
 
 </mapper>

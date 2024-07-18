@@ -28,6 +28,9 @@ public class PageParamsForCafe {
     // 테이블 목록 갯수
     private int rowCount;
 
+    // 오프셋
+    private int offset;
+
     //카페 검색
     private CafeSearch cafeSearch;
 

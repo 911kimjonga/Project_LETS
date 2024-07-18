@@ -108,6 +108,7 @@ public class CafeController {
                 .pageSize(pageSize)
                 .requestPage(selectPage)
                 .rowCount(rowCount)
+                .offset((elementSize * (selectPage - 1)))
                 .cafeSearch(cafeSearch)
                 .build();
 
@@ -161,6 +162,7 @@ public class CafeController {
                     .pageSize(pageSize)
                     .requestPage(selectPage)
                     .rowCount(count)
+                    .offset((elementSize * (selectPage - 1)))
                     .build();
             Pagination pagination = new Pagination(pageParams);
             List<Map<String, Object>> reviews = reviewService.getReviewListByCafe(id, pageParams);

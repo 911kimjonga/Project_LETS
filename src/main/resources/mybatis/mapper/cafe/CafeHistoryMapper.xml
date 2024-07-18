@@ -6,18 +6,34 @@
 <mapper namespace="com.vj.lets.domain.cafe.mapper.CafeHistoryMapper">
 
     <insert id="create">
-        INSERT INTO CAFE_HISTORY (ID, CAFE_ID)
-        VALUES (CAFE_HISTORY_ID_SEQ.NEXTVAL, CAFE_ID_SEQ.CURRVAL)
+        INSERT INTO CAFE_HISTORY (
+                                  CAFE_ID
+        )
+        VALUES (
+                last_insert_id()
+               )
     </insert>
 
     <insert id="update">
-        INSERT INTO CAFE_HISTORY (ID, MODIFY_COMMENT,CAFE_ID)
-        VALUES (CAFE_HISTORY_ID_SEQ.NEXTVAL, #{comment}, #{cafeId})
+        INSERT INTO CAFE_HISTORY (
+                                  MODIFY_COMMENT,
+                                  CAFE_ID
+        )
+        VALUES (
+                #{comment},
+                #{cafeId}
+               )
     </insert>
 
     <insert id="delete" parameterType="int">
-        INSERT INTO CAFE_HISTORY (ID, MODIFY_COMMENT,CAFE_ID)
-        VALUES (CAFE_HISTORY_ID_SEQ.NEXTVAL, 'delete',#{cafeId})
+        INSERT INTO CAFE_HISTORY (
+                                  MODIFY_COMMENT,
+                                  CAFE_ID
+        )
+        VALUES (
+                'delete',
+                #{cafeId}
+               )
     </insert>
 
 </mapper>

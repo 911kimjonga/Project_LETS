@@ -1,4 +1,4 @@
-package com.vj.lets.web.common.exception;
+package com.vj.lets.web.global.exception;
 
 import com.vj.lets.web.member.exception.MemberException;
 import lombok.extern.slf4j.Slf4j;

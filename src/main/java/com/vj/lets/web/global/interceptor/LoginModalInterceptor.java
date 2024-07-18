@@ -1,4 +1,4 @@
-package com.vj.lets.web.common.interceptor;
+package com.vj.lets.web.global.interceptor;
 
 import com.vj.lets.domain.member.dto.LoginForm;
 import jakarta.servlet.http.Cookie;

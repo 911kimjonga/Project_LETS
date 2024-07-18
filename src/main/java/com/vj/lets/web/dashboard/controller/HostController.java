@@ -19,19 +19,18 @@ import com.vj.lets.domain.review.service.ReviewService;
 import com.vj.lets.domain.room.dto.Room;
 import com.vj.lets.domain.room.dto.RoomEditForm;
 import com.vj.lets.domain.room.service.RoomService;
+import com.vj.lets.web.global.infra.S3FileUpload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +53,7 @@ public class HostController {
     private final RoomService roomService;
     private final ReservationService reservationService;
     private final ReviewService reviewService;
+    private final S3FileUpload s3FileUpload;
 
     private static final int ELEMENT_SIZE = 5;
     private static final int PAGE_SIZE = 5;
@@ -239,7 +239,7 @@ public class HostController {
     @PostMapping("/cafe/edit")
     public String cafeUpdate(@ModelAttribute CafeEditForm cafeEditForm,
                              MultipartFile imagePath,
-                             HttpServletRequest request, Model model) {
+                             HttpServletRequest request, Model model) throws IOException {
         HttpSession session = request.getSession();
         Member loginMember = (Member) session.getAttribute("loginMemberHost");
 
@@ -262,26 +262,8 @@ public class HostController {
                     .build();
 
             if (!imagePath.isEmpty()) {
-                // 이미지 폴더에 저장
-                // 업로드 이미지 확장자 가져오기
-                String imageExtension = StringUtils.getFilenameExtension(imagePath.getOriginalFilename());
-                // 업로드 한 이미지 다운로드 받을 위치 설정
-                StringBuilder imageDir = new StringBuilder();
-                imageDir.append(imageLocationCafe).append(cafeId).append(".").append(imageExtension);
-                File uploadDir = new File(imageDir.toString());
-                // 폴더 없으면 생성
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
-                try {
-                    imagePath.transferTo(uploadDir);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-                StringBuilder imagePathDB = new StringBuilder();
-                imagePathDB.append(imageDBPathCafe).append(cafeId).append(".").append(imageExtension);
-                cafeRe.setImagePath(imagePathDB.toString());
+                String objectUrl = s3FileUpload.imageUpload(imagePath, this, cafeRe.getId());
+                cafeRe.setImagePath(objectUrl);
             }
 
             String comment = "update";
@@ -383,7 +365,7 @@ public class HostController {
     public String roomUpdate(@PathVariable String id,
                              MultipartFile imagePath,
                              @ModelAttribute RoomEditForm roomForm,
-                             Model model) {
+                             Model model) throws IOException {
         Room editRoom = Room.builder()
                 .id(Integer.parseInt(id))
                 .name(roomForm.getName())
@@ -393,26 +375,8 @@ public class HostController {
                 .build();
 
         if (!imagePath.isEmpty()) {
-            // 이미지 폴더에 저장
-            // 업로드 이미지 확장자 가져오기
-            String imageExtension = StringUtils.getFilenameExtension(imagePath.getOriginalFilename());
-            // 업로드 한 이미지 다운로드 받을 위치 설정
-            StringBuilder imageDir = new StringBuilder();
-            imageDir.append(imageLocationRoom).append(id).append(".").append(imageExtension);
-            File uploadDir = new File(imageDir.toString());
-            // 폴더 없으면 생성
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-            try {
-                imagePath.transferTo(uploadDir);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            StringBuilder imagePathDB = new StringBuilder();
-            imagePathDB.append(imageDBPathRoom).append(id).append(".").append(imageExtension);
-            editRoom.setImagePath(imagePathDB.toString());
+            String objectUrl = s3FileUpload.imageUpload(imagePath, this, Integer.parseInt(id));
+            editRoom.setImagePath(objectUrl);
         }
 
         roomService.editRoom(editRoom);
@@ -452,6 +416,7 @@ public class HostController {
                 .pageSize(PAGE_SIZE)
                 .requestPage(selectPage)
                 .rowCount(count)
+                .offset((ELEMENT_SIZE * (selectPage - 1)))
                 .type(type)
                 .build();
 
@@ -498,6 +463,7 @@ public class HostController {
                 .pageSize(PAGE_SIZE)
                 .requestPage(selectPage)
                 .rowCount(count)
+                .offset((ELEMENT_SIZE * (selectPage - 1)))
                 .type(type)
                 .build();
         Pagination pagination = new Pagination(pageParams);
