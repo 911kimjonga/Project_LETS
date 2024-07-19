@@ -17,6 +17,7 @@ server:
       force: true
     session:
       timeout: 1800              # 단위 : 초, 30분 설정
+      tracking-modes: cookie     # 쿠키를 통해서 세션 유지
   tomcat:
     uri-encoding: UTF-8          # Spring Default
 
