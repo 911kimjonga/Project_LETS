@@ -1,9 +1,6 @@
 package com.vj.lets.web.member.controller;
 
-import com.vj.lets.domain.member.dto.EditForm;
-import com.vj.lets.domain.member.dto.LoginForm;
-import com.vj.lets.domain.member.dto.Member;
-import com.vj.lets.domain.member.dto.RegisterForm;
+import com.vj.lets.domain.member.dto.*;
 import com.vj.lets.domain.member.service.MemberService;
 import com.vj.lets.domain.member.util.DefaultPassword;
 import com.vj.lets.domain.member.util.MemberType;
@@ -15,12 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * 회원 관련 요청 컨트롤러
@@ -52,24 +47,20 @@ public class MemberController {
             return "index";
         }
 
-        RegisterForm registerForm = RegisterForm.builder().build();
-
-        model.addAttribute("registerForm", registerForm);
-
         return "common/member/register";
     }
 
     /**
      * 회원 가입 기능
      *
-     * @param registerForm  회원가입 폼 객체
+     * @param memberVO  회원가입 정보
      * @param bindingResult 바인딩 리절트 객체
      * @param model         모델 객체
      * @return 실행 후 반환 값
      */
     @PostMapping("/register")
     @ResponseBody
-    public Object register(@Validated @RequestBody RegisterForm registerForm,
+    public Object register(@RequestBody MemberVO memberVO,
                            BindingResult bindingResult,
                            Model model) {
 
@@ -77,14 +68,14 @@ public class MemberController {
             return "fail";
         }
 
-        if (memberService.isMemberByEmail(registerForm.getEmail()) != null) {
+        if (memberService.isMemberByEmail(memberVO.getEmail()) != null) {
             return "duplicate";
         }
 
         Member member = Member.builder()
-                .email(registerForm.getEmail())
-                .name(registerForm.getName())
-                .password(registerForm.getPassword())
+                .email(memberVO.getEmail())
+                .name(memberVO.getName())
+                .password(memberVO.getPassword())
                 .type(MemberType.GUEST.getType())
                 .build();
 
@@ -110,14 +101,12 @@ public class MemberController {
             return "index";
         }
 
-        LoginForm loginForm = LoginForm.builder().build();
-
         if (rememberEmail != null) {
-            loginForm.setEmail(rememberEmail);
-            loginForm.setRemember(true);
+            model.addAttribute("rememberEmail", rememberEmail);
+            model.addAttribute("remember", true);
+        } else {
+            model.addAttribute("rememberEmail", "guest1@gmail.com");
         }
-
-        model.addAttribute("loginForm", loginForm);
 
         return "common/member/login";
     }
@@ -125,7 +114,7 @@ public class MemberController {
     /**
      * 회원 로그인 기능
      *
-     * @param loginForm     로그인 폼 객체
+     * @param memberVO     로그인 정보
      * @param bindingResult 바인딩 리절트 객체
      * @param request       서블릿 리퀘스트 객체
      * @param model         모델 객체
@@ -133,7 +122,7 @@ public class MemberController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public String login(@Validated @RequestBody LoginForm loginForm,
+    public String login(@RequestBody MemberVO memberVO,
                         BindingResult bindingResult,
                         HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
@@ -147,7 +136,7 @@ public class MemberController {
             return "fail";
         }
 
-        Member loginMember = memberService.isMember(loginForm.getEmail(), loginForm.getPassword());
+        Member loginMember = memberService.isMember(memberVO.getEmail(), memberVO.getPassword());
         if (loginMember == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "fail";
@@ -214,7 +203,7 @@ public class MemberController {
     /**
      * 회원 정보 수정 기능
      *
-     * @param editForm  회원 정보 수정 폼 객체
+     * @param memberVO  회원 정보 수정 정보
      * @param imagePath 회원 이미지
      * @param request   서블릿 리퀘스트 객체
      * @param response  서블릿 리스폰스 객체
@@ -222,24 +211,25 @@ public class MemberController {
      * @return 논리적 뷰 이름
      */
     @PostMapping("/edit")
-    public String edit(@ModelAttribute EditForm editForm,
-                       MultipartFile imagePath,
+    @ResponseBody
+    public String edit(@RequestPart("editData") MemberVO memberVO,
+                       @RequestPart("imagePath") MultipartFile imagePath,
                        HttpServletRequest request, HttpServletResponse response,
                        Model model) throws IOException {
         HttpSession session = request.getSession();
         Member loginMember = (Member) session.getAttribute("loginMember");
 
-        EditForm checkForm = memberService.checkEdit(loginMember.getId());
+        Member checkMember = memberService.checkEdit(loginMember.getId());
 
-        if (!editForm.equals(checkForm) || !imagePath.isEmpty()) {
+        if (!memberVO.equals(checkMember) || !imagePath.isEmpty()) {
             // DB에 수정 정보 입력
             Member editMember = Member.builder()
                     .id(loginMember.getId())
-                    .password(editForm.getPassword())
-                    .name(editForm.getName())
-                    .gender(editForm.getGender())
-                    .birthday(editForm.getBirthday())
-                    .phoneNumber(editForm.getPhoneNumber())
+                    .password(memberVO.getPassword())
+                    .name(memberVO.getName())
+                    .gender(memberVO.getGender())
+                    .birthday(memberVO.getBirthday())
+                    .phoneNumber(memberVO.getPhoneNumber())
                     .build();
 
             if (!imagePath.isEmpty()) {
@@ -249,20 +239,12 @@ public class MemberController {
 
             memberService.editMember(editMember);
 
-        } else {
+            return "success";
 
-            try {
-                response.setContentType("text/html; charset=utf-8");
-                PrintWriter w = response.getWriter();
-                w.write("<script>alert('수정 정보가 기존 정보와 이미 일치합니다.');location.href='/';</script>");
-                w.flush();
-                w.close();
-            } catch (Exception e) {
-                throw new RuntimeException("오류 메세지");
-            }
+        } else {
+            return "fail";
         }
 
-        return "redirect:/mypage";
     }
 
     /**

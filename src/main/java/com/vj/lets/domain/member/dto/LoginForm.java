@@ -16,6 +16,7 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
+@Deprecated
 public class LoginForm {
 
     @NotBlank(message = "이메일을 입력해 주세요")

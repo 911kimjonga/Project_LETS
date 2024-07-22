@@ -154,13 +154,12 @@
             ID = #{id}
     </update>
 
-    <select id="readUpdateForm" parameterType="int" resultType="EditForm">
+    <select id="readUpdateForm" parameterType="int" resultType="Member">
         SELECT
             NAME,
             PHONE_NUMBER,
             BIRTHDAY,
-            GENDER,
-            IMAGE_PATH
+            GENDER
         FROM
             MEMBER
         WHERE

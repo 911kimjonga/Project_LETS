@@ -16,6 +16,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @Builder
+@Deprecated
 public class EditForm {
 
     private String password;

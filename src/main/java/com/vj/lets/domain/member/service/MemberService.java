@@ -87,7 +87,7 @@ public interface MemberService {
      * @return 체크 용 폼 객체
      * @see com.vj.lets.web.dashboard.controller.MypageController
      */
-    public EditForm checkEdit(int id);
+    public Member checkEdit(int id);
 
     /**
      * 회원 정보 수정

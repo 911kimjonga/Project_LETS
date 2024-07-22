@@ -3,7 +3,7 @@ function emailValid(email) {
 }
 
 function passwordValid(password) {
-    return /^[a-z0-9_-]{4,18}$/.test(password)
+    return /^[a-zA-Z0-9!@#$%^&_-]{4,18}$/.test(password)
 }
 
 const email = document.querySelector('#email');
@@ -14,7 +14,7 @@ let emailCheck = false;
 let passwordCheck = false;
 
 email.addEventListener('change', () => {
-    emailCheck = emailValid(document.querySelector('#email').value);
+    emailCheck = emailValid(email.value);
     let checkMessage = document.querySelector('#emailCheck');
     if (emailCheck) {
         checkMessage.innerHTML = '';
@@ -25,7 +25,7 @@ email.addEventListener('change', () => {
 })
 
 password.addEventListener('change', () => {
-    passwordCheck = passwordValid(document.querySelector('#password').value);
+    passwordCheck = passwordValid(password.value);
     let checkMessage = document.querySelector('#passwordCheck');
     if (passwordCheck) {
         checkMessage.innerHTML = '';

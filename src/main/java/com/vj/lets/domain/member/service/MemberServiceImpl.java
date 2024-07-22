@@ -140,7 +140,7 @@ public class MemberServiceImpl implements MemberService {
      * @see com.vj.lets.web.dashboard.controller.MypageController
      */
     @Override
-    public EditForm checkEdit(int id) {
+    public Member checkEdit(int id) {
         return memberMapper.readUpdateForm(id);
     }
 

@@ -84,7 +84,7 @@ public interface MemberMapper {
      * @param id 회원 ID
      * @return editForm 수정 정보 체크 용 폼 객체
      */
-    public EditForm readUpdateForm(int id);
+    public Member readUpdateForm(int id);
 
     /**
      * 회원 정보 수정

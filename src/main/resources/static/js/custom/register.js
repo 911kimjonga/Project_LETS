@@ -3,7 +3,7 @@ function emailValid(email) {
 }
 
 function passwordValid(password) {
-    return /^[a-z0-9_-]{4,18}$/.test(password)
+    return /^[a-zA-Z0-9!@#$%^&_-]{4,18}$/.test(password)
 }
 
 function nameValid(name) {
@@ -76,7 +76,6 @@ document.querySelector('form#register_form').addEventListener('submit', event =>
         const registerForm = {
             email: email.value,
             password: password.value,
-            passwordConfirm: passwordConfirm.value,
             name: name.value
         }
         fetch('/member/register', {
