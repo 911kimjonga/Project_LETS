@@ -15,3 +15,4 @@ spring:
   profiles:
     # 개발 환경을 dev로 설정
     include: prod, aws
+    active: local

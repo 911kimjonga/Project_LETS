@@ -29,7 +29,7 @@ logging:
     console: "[%d{yy-MM-dd}][%thread][%-5level]\\(%F: %method\\(\\): %L\\) : %msg%n"
     file: "[%d{yyyy-MM-dd HH:mm:ss}][%thread][%-5level]\\(%F: %method\\(\\): %L\\) : %msg%n"
   file:
-    name: C:/project/project_lets/log/application-dev.log
+    name: log/application-dev.log
   logback:
     rollingpolicy:
       max-file-size: 1MB         #default 10M
