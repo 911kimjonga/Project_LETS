@@ -27,6 +27,7 @@ public class MemberVO {
     private String type;
     private String imagePath;
     private String status;
+    private String fromSocial;
 
     public MemberVO(String email, String name, String password) {
         this.email = email;

@@ -8,13 +8,14 @@ import com.vj.lets.domain.group.mapper.GroupHistoryMapper;
 import com.vj.lets.domain.group.mapper.GroupMemberListMapper;
 import com.vj.lets.domain.group.mapper.StudyGroupMapper;
 import com.vj.lets.domain.group.util.PositionType;
-import com.vj.lets.domain.member.dto.EditForm;
 import com.vj.lets.domain.member.dto.Member;
 import com.vj.lets.domain.member.mapper.MemberHistoryMapper;
 import com.vj.lets.domain.member.mapper.MemberMapper;
 import com.vj.lets.domain.member.util.MemberHistoryComment;
 import com.vj.lets.domain.member.util.MemberType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,8 @@ public class MemberServiceImpl implements MemberService {
     private final GroupHistoryMapper groupHistoryMapper;
     private final GroupMemberListMapper groupMemberListMapper;
 
+//    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     /**
      * 회원 가입
      *
@@ -49,6 +52,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void register(Member member) {
+//        member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberMapper.create(member);
         memberHistoryMapper.create();
     }
@@ -152,6 +156,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void editMember(Member member) {
+//        member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberMapper.update(member);
         memberHistoryMapper.createByUpdate(member.getId(), MemberHistoryComment.UPDATE.getComment());
     }
@@ -208,4 +213,10 @@ public class MemberServiceImpl implements MemberService {
         memberHistoryMapper.createByUpdate(id, MemberHistoryComment.DELETE.getComment());
 
     }
+
+//    @Override
+//    public PasswordEncoder passwordEncoder() {
+//        return this.passwordEncoder;
+//    }
+    
 }

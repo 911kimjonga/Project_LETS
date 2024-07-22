@@ -2,6 +2,7 @@ package com.vj.lets.domain.member.service;
 
 import com.vj.lets.domain.member.dto.EditForm;
 import com.vj.lets.domain.member.dto.Member;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Map;
@@ -102,5 +103,7 @@ public interface MemberService {
      * @param id 회원 ID
      */
     public void removeMember(int id);
+
+//    public PasswordEncoder passwordEncoder();
 
 }
