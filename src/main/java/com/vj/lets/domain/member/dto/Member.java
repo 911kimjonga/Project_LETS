@@ -28,6 +28,7 @@ public class Member {
     private String type;
     private String imagePath;
     private String status;
+    private int fromSocial;
 
 }
 

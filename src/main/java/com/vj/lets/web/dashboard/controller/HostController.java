@@ -112,16 +112,17 @@ public class HostController {
             return "fail";
         }
 
-        Member cryptMember = memberService.isMemberByEmail(memberVO.getEmail());
-        Boolean cryptMatch = memberService.matchesBcrypt(memberVO.getPassword(), cryptMember.getPassword(), MemberCrypt.STRENGTH.getStrength());
+        boolean cryptMatch = memberService.matchesBcrypt(memberVO.getPassword(), memberService.isMember(memberVO.getEmail()), MemberCrypt.STRENGTH.getStrength());
 
         if (cryptMatch) {
+            Member memberDTO = memberService.getMemberByEmail(memberVO.getEmail());
+
             Member loginMember = Member.builder()
-                    .id(cryptMember.getId())
-                    .email(cryptMember.getEmail())
-                    .name(cryptMember.getName())
-                    .type(cryptMember.getType())
-                    .imagePath(cryptMember.getImagePath())
+                    .id(memberDTO.getId())
+                    .email(memberDTO.getEmail())
+                    .name(memberDTO.getName())
+                    .type(memberDTO.getType())
+                    .imagePath(memberDTO.getImagePath())
                     .build();
 
             if (loginMember == null) {

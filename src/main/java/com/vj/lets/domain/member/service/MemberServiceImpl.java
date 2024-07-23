@@ -54,15 +54,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 로그인 시 회원 조회
+     * 로그인 시 회원 유무 조회를 위한 암호화 비밀번호 조회
      *
      * @param email    이메일
-     * @param password 비밀번호
      * @return 로그인 한 회원 정보
      */
     @Override
-    public Member isMember(String email, String password) {
-        return memberMapper.readByEmailAndPassword(email, password);
+    public String isMember(String email) {
+        return memberMapper.readPasswordByEmail(email);
     }
 
     /**
@@ -88,14 +87,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 이메일 중복 체크 조회 및 API 로그인 시 회원 조회
+     * 이메일 중복 체크 조회 및 로그인 시 회원 조회
      *
      * @param email 이메일
      * @return 이메일로 조회한 회원 정보
      */
     @Override
-    public Member isMemberByEmail(String email) {
+    public Member getMemberByEmail(String email) {
         return memberMapper.readByEmail(email);
+    }
+
+    @Override
+    public Member getSocialMemberByEmail(String email) {
+        return memberMapper.readSocialByEmail(email);
     }
 
     /**

@@ -33,6 +33,14 @@ public interface MemberMapper {
     public List<Member> readAll();
 
     /**
+     * 이메일로 회원 암호화 비밀번호 조회
+     *
+     * @param email 이메일
+     * @return 암호화 된 회원 비밀번호
+     */
+    public String readPasswordByEmail(String email);
+
+    /**
      * 이메일로 회원 조회
      *
      * @param email 이메일
@@ -41,13 +49,12 @@ public interface MemberMapper {
     public Member readByEmail(String email);
 
     /**
-     * 이메일, 비밀번호로 회원 조회
-     *
-     * @param email    이메일
-     * @param password 비밀번호
+     * 이메일로 소셜 회원 조회
+     * 
+     * @param email 이메일
      * @return 회원 정보
      */
-    public Member readByEmailAndPassword(@Param("email") String email, @Param("password") String password);
+    public Member readSocialByEmail(String email);
 
     /**
      * ID로 회원 조회

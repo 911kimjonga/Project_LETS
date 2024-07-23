@@ -29,6 +29,14 @@ public class MemberVO {
     private String status;
     private String fromSocial;
 
+    public MemberVO(int id, String email, String name, String type, String imagePath) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.type = type;
+        this.imagePath = imagePath;
+    }
+
     public MemberVO(String email, String name, String password) {
         this.email = email;
         this.name = name;

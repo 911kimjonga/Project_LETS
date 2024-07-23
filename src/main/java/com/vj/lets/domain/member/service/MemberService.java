@@ -24,13 +24,12 @@ public interface MemberService {
     public void register(Member member);
 
     /**
-     * 로그인 시 회원 조회
+     * 로그인 시 회원 유무 조회를 위한 암호화 비밀번호 조회
      *
      * @param email    이메일
-     * @param password 비밀번호
      * @return 로그인 한 회원 정보
      */
-    public Member isMember(String email, String password);
+    public String isMember(String email);
 
     /**
      * 비밀번호 암호화 처리
@@ -50,12 +49,20 @@ public interface MemberService {
     public boolean matchesBcrypt(String inputValue, String compareValue, int strength);
 
     /**
-     * 이메일 중복 체크 조회 및 API 로그인 시 회원 조회
+     * 이메일 중복 체크 조회 및 로그인 시 회원 조회
      *
      * @param email 이메일
      * @return 이메일로 조회한 회원 정보
      */
-    public Member isMemberByEmail(String email);
+    public Member getMemberByEmail(String email);
+
+    /**
+     * 이메일로 소셜 회원 조회
+     * 
+     * @param email 이메일
+     * @return 조회한 회원 정보
+     */
+    public Member getSocialMemberByEmail(String email);
 
     /**
      * 전체 회원 목록 조회

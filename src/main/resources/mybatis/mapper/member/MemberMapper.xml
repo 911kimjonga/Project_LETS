@@ -37,11 +37,21 @@
             regdate DESC
     </select>
 
+    <select id="readPasswordByEmail" parameterType="string" resultType="string">
+        SELECT
+            PASSWORD
+        FROM
+            MEMBER
+        WHERE
+            EMAIL = #{email}
+          AND
+            STATUS = 'enabled'
+    </select>
+
     <select id="readByEmail" parameterType="string" resultType="Member">
         SELECT
             ID,
             EMAIL,
-            PASSWORD,
             NAME,
             TYPE,
             IMAGE_PATH
@@ -53,7 +63,7 @@
             STATUS = 'enabled'
     </select>
 
-    <select id="readByEmailAndPassword" resultType="Member">
+    <select id="readSocialByEmail" parameterType="string" resultType="Member">
         SELECT
             ID,
             EMAIL,
@@ -65,9 +75,9 @@
         WHERE
             EMAIL = #{email}
           AND
-            PASSWORD = #{password}
-          AND
             STATUS = 'enabled'
+          AND
+            FROM_SOCIAL = 1
     </select>
 
     <select id="readById" parameterType="int" resultType="Member">

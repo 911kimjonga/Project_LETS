@@ -68,18 +68,19 @@ public class MemberController {
             return "fail";
         }
 
-        if (memberService.isMemberByEmail(memberVO.getEmail()) != null) {
+        if (memberService.getMemberByEmail(memberVO.getEmail()) != null) {
             return "duplicate";
         }
 
-        Member member = Member.builder()
+        Member memberDTO = Member.builder()
                 .email(memberVO.getEmail())
                 .name(memberVO.getName())
                 .password(memberService.encodeBcrypt(memberVO.getPassword(), MemberCrypt.STRENGTH.getStrength()))
                 .type(MemberType.GUEST.getType())
+                .fromSocial(0)
                 .build();
 
-        memberService.register(member);
+        memberService.register(memberDTO);
 
         return "success";
     }
@@ -136,16 +137,18 @@ public class MemberController {
             return "fail";
         }
 
-        Member cryptMember = memberService.isMemberByEmail(memberVO.getEmail());
-        Boolean cryptMatch = memberService.matchesBcrypt(memberVO.getPassword(), cryptMember.getPassword(), MemberCrypt.STRENGTH.getStrength());
+        boolean cryptMatch = memberService.matchesBcrypt(memberVO.getPassword(), memberService.isMember(memberVO.getEmail()), MemberCrypt.STRENGTH.getStrength());
 
         if (cryptMatch) {
+
+            Member memberDTO = memberService.getMemberByEmail(memberVO.getEmail());
+
             Member loginMember = Member.builder()
-                    .id(cryptMember.getId())
-                    .email(cryptMember.getEmail())
-                    .name(cryptMember.getName())
-                    .type(cryptMember.getType())
-                    .imagePath(cryptMember.getImagePath())
+                    .id(memberDTO.getId())
+                    .email(memberDTO.getEmail())
+                    .name(memberDTO.getName())
+                    .type(memberDTO.getType())
+                    .imagePath(memberDTO.getImagePath())
                     .build();
 
             if (loginMember == null) {
@@ -198,18 +201,18 @@ public class MemberController {
                              HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
 
-        if (memberService.isMemberByEmail(email) == null) {
+        if (memberService.getMemberByEmail(email) == null) {
             Member member = Member.builder()
                     .email(email)
                     .name(name)
-                    .password(DefaultPassword.DEFAULT.getPassword())
                     .type(MemberType.GUEST.getType())
+                    .fromSocial(1)
                     .build();
 
             memberService.register(member);
         }
 
-        Member naverMember = memberService.isMemberByEmail(email);
+        Member naverMember = memberService.getSocialMemberByEmail(email);
 
         session.setAttribute("loginMember", naverMember);
 
@@ -236,15 +239,22 @@ public class MemberController {
         Member checkMember = memberService.checkEdit(loginMember.getId());
 
         if (!memberVO.equals(checkMember) || imagePath != null) {
-            // DB에 수정 정보 입력
+
             Member editMember = Member.builder()
                     .id(loginMember.getId())
-                    .password(memberService.encodeBcrypt(memberVO.getPassword(), MemberCrypt.STRENGTH.getStrength()))
-                    .name(memberVO.getName())
-                    .gender(memberVO.getGender())
-                    .birthday(memberVO.getBirthday())
-                    .phoneNumber(memberVO.getPhoneNumber())
                     .build();
+
+            if (!memberVO.getPassword().isEmpty()) {
+                editMember.setPassword(memberService.encodeBcrypt(memberVO.getPassword(), MemberCrypt.STRENGTH.getStrength()));
+            } else if (!memberVO.getName().isEmpty()) {
+                editMember.setName(memberVO.getName());
+            } else if (!memberVO.getGender().isEmpty()) {
+                editMember.setGender(memberVO.getGender());
+            } else if (!memberVO.getBirthday().isEmpty()) {
+                editMember.setBirthday(memberVO.getBirthday());
+            } else if (!memberVO.getPhoneNumber().isEmpty()) {
+                editMember.setPhoneNumber(memberVO.getPhoneNumber());
+            }
 
             if (imagePath != null) {
                 String objectUrl = s3FileUpload.imageUpload(imagePath, this, editMember.getId());
@@ -273,10 +283,12 @@ public class MemberController {
     @ResponseBody
     public String delete(@RequestBody String password, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        Member loginMember = (Member) session.getAttribute("loginMember");
+        MemberVO memberVO = (MemberVO) session.getAttribute("loginMember");
 
-        if (memberService.isMember(loginMember.getEmail(), password) != null) {
-            memberService.removeMember(loginMember.getId());
+        boolean cryptMatch = memberService.matchesBcrypt(password, memberService.isMember(memberVO.getEmail()), MemberCrypt.STRENGTH.getStrength());
+
+        if (cryptMatch) {
+            memberService.removeMember(memberVO.getId());
 
             if (session != null) {
                 session.invalidate();

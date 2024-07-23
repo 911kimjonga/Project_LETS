@@ -59,18 +59,18 @@ public class GoogleLoginController {
         RedirectView redirectView = new RedirectView();
         HttpSession session = request.getSession();
 
-        if (memberService.isMemberByEmail(userEmail) == null) {
+        if (memberService.getMemberByEmail(userEmail) == null) {
             Member member = Member.builder()
                     .email(userEmail)
                     .name(userName)
-                    .password(DefaultPassword.DEFAULT.getPassword())
                     .type(MemberType.GUEST.getType())
+                    .fromSocial(1)
                     .build();
 
             memberService.register(member);
         }
 
-        Member googleMember = memberService.isMemberByEmail(userEmail);
+        Member googleMember = memberService.getSocialMemberByEmail(userEmail);
         session.setAttribute("googleMember", googleMember);
 
         redirectView.setUrl("/member/google");
