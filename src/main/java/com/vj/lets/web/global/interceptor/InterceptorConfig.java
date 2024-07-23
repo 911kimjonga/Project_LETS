@@ -12,7 +12,6 @@ import java.util.List;
  *
  * @author VJ특공대 김종원
  * @version 1.0
- * @see LoginModalInterceptor
  * @since 2023-09-08 (금)
  */
 @Configuration
@@ -24,10 +23,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
             "/member/register", "/member/login", "/admin/login", "/host/login", "/member/google", "/member/callback", "/google/login", "/member/naver", "/cafe", "/cafe/*", "/group", "/contact", "/support/**", "/error",
             "/admin/**", "/host/**");
-
-    public final List<String> loginModalNotEssential = Arrays.asList("/**/*.ttf", "/**/*.woff", "/**/*.mp4", "/**/*.png", "/**/*.jpg", "/**/*.ico", "/**/*.html",
-            "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
-            "/mypage/**", "/host/**", "/admin/**", "/member/login/**", "/member/register/**");
 
     public final List<String> loginAdminEssential = Arrays.asList("/admin/**");
 
@@ -58,12 +53,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .order(3)
                 .addPathPatterns(loginHostEssential)
                 .excludePathPatterns(hostNotEssential);
-
-        // 로그인 모달 창 인터셉터 등록
-        registry.addInterceptor(new LoginModalInterceptor())
-                .order(4)
-                .addPathPatterns(loginEssential)
-                .addPathPatterns(loginModalNotEssential);
     }
 
 }

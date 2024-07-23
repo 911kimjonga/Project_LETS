@@ -27,10 +27,7 @@
 
     </div>
 
-    <!--/* 페이지 공통 로그인 팝업 */-->
-    <th:block th:if="${session.loginMember == null}">
-        <th:block th:replace="~{common/layout/fragments/common_login-popup :: login-popup}"></th:block>
-    </th:block>
+    <!--/* 페이지 공통 로그아웃 팝업 */-->
     <th:block th:if="${session.loginMember != null}">
         <th:block th:replace="~{common/layout/fragments/common_logout-popup :: logout-popup}"></th:block>
     </th:block>
