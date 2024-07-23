@@ -52,10 +52,7 @@ public class MypageController {
 
         Member member = memberService.getMember(loginMember.getId());
 
-        EditForm editForm = EditForm.builder().build();
-
         model.addAttribute("member", member);
-        model.addAttribute("editForm", editForm);
 
         return "dashboard/mypage/mypage_dashboard";
     }

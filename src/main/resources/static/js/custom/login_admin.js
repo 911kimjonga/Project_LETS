@@ -1,5 +1,5 @@
 function emailValid(email) {
-    return /^[a-z0-9_-]{1,18}$/.test(email)
+    return /^[a-zA-Z0-9_-]{1,18}$/.test(email)
 }
 
 function passwordValid(password) {

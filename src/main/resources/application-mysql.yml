@@ -1,0 +1,7 @@
+#Database \uC5F0\uACB0 \uC815\uBCF4 \uC124\uC815
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://jw-prdt-rds.csz4lghtik4d.ap-northeast-2.rds.amazonaws.com:3306/lets
+    username: jwkim
+    password: jwkimawsrds

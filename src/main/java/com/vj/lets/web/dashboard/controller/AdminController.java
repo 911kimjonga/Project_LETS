@@ -6,8 +6,10 @@ import com.vj.lets.domain.common.web.PageParams;
 import com.vj.lets.domain.common.web.Pagination;
 import com.vj.lets.domain.member.dto.LoginForm;
 import com.vj.lets.domain.member.dto.Member;
+import com.vj.lets.domain.member.dto.MemberVO;
 import com.vj.lets.domain.member.service.MemberService;
 import com.vj.lets.domain.member.util.DefaultPassword;
+import com.vj.lets.domain.member.util.MemberCrypt;
 import com.vj.lets.domain.member.util.MemberType;
 import com.vj.lets.domain.support.dto.*;
 import com.vj.lets.domain.support.service.ContactService;
@@ -54,15 +56,20 @@ public class AdminController {
      */
     @GetMapping("/login")
     public String adminLoginView(@CookieValue(value = "remember", required = false) String rememberEmail,
-                                 Model model) {
-        LoginForm loginForm = LoginForm.builder().build();
+                                 HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        Member loginMember = (Member) session.getAttribute("loginMemberAdmin");
 
-        if (rememberEmail != null) {
-            loginForm.setEmail(rememberEmail);
-            loginForm.setRemember(true);
+        if (loginMember != null) {
+            return "redirect:/";
         }
 
-        model.addAttribute("loginForm", loginForm);
+        if (rememberEmail != null) {
+            model.addAttribute("rememberEmail", rememberEmail);
+            model.addAttribute("remember", true);
+        } else {
+            model.addAttribute("rememberEmail", "admin1");
+        }
 
         return "common/member/login_admin";
     }
@@ -70,7 +77,7 @@ public class AdminController {
     /**
      * 관리자 전용 로그인 기능
      *
-     * @param loginForm     로그인 폼 객체
+     * @param memberVO      로그인 정보
      * @param bindingResult 바인딩 리절트 객체
      * @param request       서블릿 리퀘스트 객체
      * @param model         모델 객체
@@ -78,7 +85,7 @@ public class AdminController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public String login(@Validated @RequestBody LoginForm loginForm,
+    public String login(@Validated @RequestBody MemberVO memberVO,
                         BindingResult bindingResult,
                         HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
@@ -92,15 +99,30 @@ public class AdminController {
             return "fail";
         }
 
-        Member loginMember = memberService.isMember(loginForm.getEmail(), loginForm.getPassword());
-        if (loginMember == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "fail";
-        }
+        Member cryptMember = memberService.isMemberByEmail(memberVO.getEmail());
+        Boolean cryptMatch = memberService.matchesBcrypt(memberVO.getPassword(), cryptMember.getPassword(), MemberCrypt.STRENGTH.getStrength());
 
-        if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
-            session.setAttribute("loginMemberAdmin", loginMember);
-            return "success";
+        if (cryptMatch) {
+            Member loginMember = Member.builder()
+                    .id(cryptMember.getId())
+                    .email(cryptMember.getEmail())
+                    .name(cryptMember.getName())
+                    .type(cryptMember.getType())
+                    .imagePath(cryptMember.getImagePath())
+                    .build();
+
+            if (loginMember == null) {
+                bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+                return "fail";
+            }
+
+            if (loginMember.getType().equals(MemberType.ADMIN.getType())) {
+                session.setAttribute("loginMemberAdmin", loginMember);
+                return "success";
+            } else {
+                return "fail";
+            }
+
         } else {
             return "fail";
         }

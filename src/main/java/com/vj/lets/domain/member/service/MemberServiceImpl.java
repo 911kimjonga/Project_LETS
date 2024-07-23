@@ -15,7 +15,6 @@ import com.vj.lets.domain.member.util.MemberHistoryComment;
 import com.vj.lets.domain.member.util.MemberType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +41,6 @@ public class MemberServiceImpl implements MemberService {
     private final GroupHistoryMapper groupHistoryMapper;
     private final GroupMemberListMapper groupMemberListMapper;
 
-//    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     /**
      * 회원 가입
      *
@@ -52,7 +49,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void register(Member member) {
-//        member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberMapper.create(member);
         memberHistoryMapper.create();
     }
@@ -67,6 +63,28 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member isMember(String email, String password) {
         return memberMapper.readByEmailAndPassword(email, password);
+    }
+
+    /**
+     * 비밀번호 암호화 처리 기능
+     *
+     * @param inputValue 입력 비밀번호
+     * @return 암호화 처리 된 비밀번호
+     */
+    public String encodeBcrypt(String inputValue, int strength) {
+        return new BCryptPasswordEncoder(strength).encode(inputValue);
+    }
+
+    /**
+     * 암호화 비밀번호 비교 기능
+     *
+     * @param inputValue 암호화된 입력 비밀번호
+     * @param compareValue 암호화된 비교 비밀번호
+     * @return 일치 여부
+     */
+    public boolean matchesBcrypt(String inputValue, String compareValue, int strength) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(strength);
+        return passwordEncoder.matches(inputValue, compareValue);
     }
 
     /**
@@ -156,7 +174,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void editMember(Member member) {
-//        member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberMapper.update(member);
         memberHistoryMapper.createByUpdate(member.getId(), MemberHistoryComment.UPDATE.getComment());
     }
@@ -213,10 +230,5 @@ public class MemberServiceImpl implements MemberService {
         memberHistoryMapper.createByUpdate(id, MemberHistoryComment.DELETE.getComment());
 
     }
-
-//    @Override
-//    public PasswordEncoder passwordEncoder() {
-//        return this.passwordEncoder;
-//    }
     
 }

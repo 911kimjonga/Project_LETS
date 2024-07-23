@@ -33,6 +33,23 @@ public interface MemberService {
     public Member isMember(String email, String password);
 
     /**
+     * 비밀번호 암호화 처리
+     *
+     * @param inputValue 입력 비밀번호
+     * @return 암호화 처리 된 비밀번호
+     */
+    public String encodeBcrypt(String inputValue, int strength);
+
+    /**
+     * 암호화 비밀번호 비교
+     *
+     * @param inputValue 암호화된 입력 비밀번호
+     * @param compareValue 암호화된 비교 비밀번호
+     * @return 일치 여부
+     */
+    public boolean matchesBcrypt(String inputValue, String compareValue, int strength);
+
+    /**
      * 이메일 중복 체크 조회 및 API 로그인 시 회원 조회
      *
      * @param email 이메일
@@ -104,6 +121,5 @@ public interface MemberService {
      */
     public void removeMember(int id);
 
-//    public PasswordEncoder passwordEncoder();
 
 }

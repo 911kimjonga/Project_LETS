@@ -71,6 +71,9 @@ document.getElementById('edit-form').addEventListener('submit', event => {
             gender: gender.value,
             birthday: birthday.value,
         };
+        console.log(editData);
+        console.log(editData);
+        console.log(editData);
         const blob = new Blob([JSON.stringify(editData)], { type: 'application/json'});
 
         requestForm.append('editData', blob);

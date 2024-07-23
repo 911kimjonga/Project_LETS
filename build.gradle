@@ -11,13 +11,13 @@ java {
     sourceCompatibility = '17'
 }
 
-sourceSets {
-    main {
-        resources {
-            exclude "**.yml", "**.properties", "client_secret.json"
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        resources {
+//            exclude "**.yml", "**.properties", "client_secret.json"
+//        }
+//    }
+//}
 
 configurations {
     compileOnly {
@@ -30,7 +30,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // JUnit5 Framework
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
@@ -70,6 +69,9 @@ dependencies {
     // MyBatis Framework
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.2'
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Thymeleaf Engine
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

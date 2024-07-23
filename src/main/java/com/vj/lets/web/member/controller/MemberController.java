@@ -3,10 +3,10 @@ package com.vj.lets.web.member.controller;
 import com.vj.lets.domain.member.dto.*;
 import com.vj.lets.domain.member.service.MemberService;
 import com.vj.lets.domain.member.util.DefaultPassword;
+import com.vj.lets.domain.member.util.MemberCrypt;
 import com.vj.lets.domain.member.util.MemberType;
 import com.vj.lets.web.global.infra.S3FileUpload;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -75,7 +75,7 @@ public class MemberController {
         Member member = Member.builder()
                 .email(memberVO.getEmail())
                 .name(memberVO.getName())
-                .password(memberVO.getPassword())
+                .password(memberService.encodeBcrypt(memberVO.getPassword(), MemberCrypt.STRENGTH.getStrength()))
                 .type(MemberType.GUEST.getType())
                 .build();
 
@@ -98,7 +98,7 @@ public class MemberController {
         Member loginMember = (Member) session.getAttribute("loginMember");
 
         if (loginMember != null) {
-            return "index";
+            return "redirect:/";
         }
 
         if (rememberEmail != null) {
@@ -114,7 +114,7 @@ public class MemberController {
     /**
      * 회원 로그인 기능
      *
-     * @param memberVO     로그인 정보
+     * @param memberVO      로그인 정보
      * @param bindingResult 바인딩 리절트 객체
      * @param request       서블릿 리퀘스트 객체
      * @param model         모델 객체
@@ -136,15 +136,30 @@ public class MemberController {
             return "fail";
         }
 
-        Member loginMember = memberService.isMember(memberVO.getEmail(), memberVO.getPassword());
-        if (loginMember == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "fail";
-        }
+        Member cryptMember = memberService.isMemberByEmail(memberVO.getEmail());
+        Boolean cryptMatch = memberService.matchesBcrypt(memberVO.getPassword(), cryptMember.getPassword(), MemberCrypt.STRENGTH.getStrength());
 
-        if (loginMember.getType().equals(MemberType.GUEST.getType())) {
-            session.setAttribute("loginMember", loginMember);
-            return "success";
+        if (cryptMatch) {
+            Member loginMember = Member.builder()
+                    .id(cryptMember.getId())
+                    .email(cryptMember.getEmail())
+                    .name(cryptMember.getName())
+                    .type(cryptMember.getType())
+                    .imagePath(cryptMember.getImagePath())
+                    .build();
+
+            if (loginMember == null) {
+                bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+                return "fail";
+            }
+
+            if (loginMember.getType().equals(MemberType.GUEST.getType())) {
+                session.setAttribute("loginMember", loginMember);
+                return "success";
+            } else {
+                return "fail";
+            }
+
         } else {
             return "fail";
         }
@@ -179,7 +194,8 @@ public class MemberController {
      */
     @PostMapping("/naver")
     @ResponseBody
-    public String naverLogin(@RequestParam String email, @RequestParam String name, HttpServletRequest request, Model model) {
+    public String naverLogin(@RequestParam String email, @RequestParam String name,
+                             HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
 
         if (memberService.isMemberByEmail(email) == null) {
@@ -206,33 +222,31 @@ public class MemberController {
      * @param memberVO  회원 정보 수정 정보
      * @param imagePath 회원 이미지
      * @param request   서블릿 리퀘스트 객체
-     * @param response  서블릿 리스폰스 객체
      * @param model     모델 객체
      * @return 논리적 뷰 이름
      */
     @PostMapping("/edit")
     @ResponseBody
     public String edit(@RequestPart("editData") MemberVO memberVO,
-                       @RequestPart("imagePath") MultipartFile imagePath,
-                       HttpServletRequest request, HttpServletResponse response,
-                       Model model) throws IOException {
+                       @RequestPart(value = "imagePath", required = false)  MultipartFile imagePath,
+                       HttpServletRequest request, Model model) throws IOException {
         HttpSession session = request.getSession();
         Member loginMember = (Member) session.getAttribute("loginMember");
 
         Member checkMember = memberService.checkEdit(loginMember.getId());
 
-        if (!memberVO.equals(checkMember) || !imagePath.isEmpty()) {
+        if (!memberVO.equals(checkMember) || imagePath != null) {
             // DB에 수정 정보 입력
             Member editMember = Member.builder()
                     .id(loginMember.getId())
-                    .password(memberVO.getPassword())
+                    .password(memberService.encodeBcrypt(memberVO.getPassword(), MemberCrypt.STRENGTH.getStrength()))
                     .name(memberVO.getName())
                     .gender(memberVO.getGender())
                     .birthday(memberVO.getBirthday())
                     .phoneNumber(memberVO.getPhoneNumber())
                     .build();
 
-            if (!imagePath.isEmpty()) {
+            if (imagePath != null) {
                 String objectUrl = s3FileUpload.imageUpload(imagePath, this, editMember.getId());
                 editMember.setImagePath(objectUrl);
             }

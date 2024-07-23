@@ -59,9 +59,6 @@ logging:
 
 # Spring 설정
 spring:
-  #Database 연결 정보 설정
-  config:
-    import: db-config-mysql.properties
   # Thymeleaf 설정
   thymeleaf:
     prefix: classpath:/templates/
