@@ -11,13 +11,13 @@ java {
     sourceCompatibility = '17'
 }
 
-//sourceSets {
-//    main {
-//        resources {
-//            exclude "**.yml", "**.properties", "client_secret.json"
-//        }
-//    }
-//}
+sourceSets {
+   main {
+       resources {
+           exclude "**.yml", "**.properties", "client_secret.json"
+       }
+   }
+}
 
 configurations {
     compileOnly {
