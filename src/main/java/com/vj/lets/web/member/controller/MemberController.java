@@ -205,6 +205,7 @@ public class MemberController {
             Member member = Member.builder()
                     .email(email)
                     .name(name)
+                    .password(null)
                     .type(MemberType.GUEST.getType())
                     .fromSocial(1)
                     .build();

@@ -63,6 +63,7 @@ public class GoogleLoginController {
             Member member = Member.builder()
                     .email(userEmail)
                     .name(userName)
+                    .password(null)
                     .type(MemberType.GUEST.getType())
                     .fromSocial(1)
                     .build();

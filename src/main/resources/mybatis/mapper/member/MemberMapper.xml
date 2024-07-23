@@ -10,13 +10,15 @@
                            EMAIL,
                            NAME,
                            PASSWORD,
-                           TYPE
+                           TYPE,
+                           FROM_SOCIAL
                            )
         VALUES (
                 #{email},
                 #{name},
                 #{password},
-                #{type}
+                #{type},
+                #{fromSocial}
                )
     </insert>
 
@@ -46,6 +48,8 @@
             EMAIL = #{email}
           AND
             STATUS = 'enabled'
+          AND
+            FROM_SOCIAL = 0
     </select>
 
     <select id="readByEmail" parameterType="string" resultType="Member">
