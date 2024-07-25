@@ -1,5 +1,8 @@
-package com.vj.lets.web.global.interceptor;
+package com.vj.lets.web.global.resource;
 
+import com.vj.lets.web.global.interceptor.AdminCheckInterceptor;
+import com.vj.lets.web.global.interceptor.HostCheckInterceptor;
+import com.vj.lets.web.global.interceptor.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -8,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 인터셉터 등록 자바 설정 클래스 구현
+ * 인터셉터 등록 설정 Configuration
  *
  * @author VJ특공대 김종원
  * @version 1.0

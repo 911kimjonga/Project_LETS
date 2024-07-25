@@ -2,7 +2,6 @@ package com.vj.lets.web.member.controller;
 
 import com.vj.lets.domain.member.dto.*;
 import com.vj.lets.domain.member.service.MemberService;
-import com.vj.lets.domain.member.util.DefaultPassword;
 import com.vj.lets.domain.member.util.MemberCrypt;
 import com.vj.lets.domain.member.util.MemberType;
 import com.vj.lets.web.global.infra.S3FileUpload;
