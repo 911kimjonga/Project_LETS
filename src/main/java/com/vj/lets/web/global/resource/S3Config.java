@@ -9,6 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * AWS S3에 파일 업로드 관련 Configuration
+ *
+ * @author 김종원
+ * @version 1.0
+ * @since 24. 7. 25. (목)
+ */
 @Configuration
 public class S3Config {
     @Value("${cloud.aws.credentials.accessKey}")

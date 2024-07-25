@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * AWS S3에 파일 업로드 컴포넌트
+ * AWS S3에 파일 업로드 구현 컴포넌트
  *
  * @author 김종원
  * @version 1.0
@@ -26,6 +26,15 @@ public class S3FileUpload {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    /**
+     * 이미지 업로드 구현 메소드
+     *
+     * @param multipartFile 업로드 할 파일
+     * @param object 실행 타겟
+     * @param typeId 타겟 시퀀스
+     * @return S3 URL 경로
+     * @throws IOException IOException
+     */
     public String imageUpload (MultipartFile multipartFile, Object object, int typeId) throws IOException {
         // 파일명 가져오기
         String fileName = multipartFile.getOriginalFilename();
