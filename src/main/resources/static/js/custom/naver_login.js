@@ -1,13 +1,3 @@
-// 네이버 API Client ID / Callback URI
-var naver_id_login = new naver_id_login("qI0lCLf5is8Pnnk1Oj8P", "http://localhost:80/naverCallback");
-var state = naver_id_login.getUniqState();
-
-// 네이버 로그인 버튼 추가 및 화면 구현
-naver_id_login.setButton("green", 3,40);
-naver_id_login.setDomain("http://localhost:80/");
-naver_id_login.setState(state);
-naver_id_login.setPopup();
-naver_id_login.init_naver_id_login();
 
 $(document).on("click", "#naver-custom", function () {
     var btnNaverLogin = document.getElementById("naver_id_login").firstChild;

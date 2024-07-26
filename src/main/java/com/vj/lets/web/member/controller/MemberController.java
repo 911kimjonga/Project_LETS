@@ -8,6 +8,7 @@ import com.vj.lets.web.global.infra.S3FileUpload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,13 @@ import java.io.IOException;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
+
+    // 네이버 로그인 관련
+    @Value("${naver.clientId}")
+    private String clientId;
+
+    @Value("${naver.callbackUrl}")
+    private String callbackUrl;
 
     private final MemberService memberService;
     private final S3FileUpload s3FileUpload;
@@ -107,6 +115,9 @@ public class MemberController {
         } else {
             model.addAttribute("rememberEmail", "guest1@gmail.com");
         }
+
+        model.addAttribute("clientId", clientId);
+        model.addAttribute("callbackUrl", callbackUrl);
 
         return "common/member/login";
     }

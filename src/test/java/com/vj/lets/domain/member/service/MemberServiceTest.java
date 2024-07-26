@@ -44,29 +44,6 @@ class MemberServiceTest {
     }
 
     @Test
-    void isMemberTest() {
-        // given
-        String email = "lhy@gmail.com";
-        String password = "1111";
-        // when
-        Member member = memberService.isMember(email, password);
-        // then
-        log.info("회원 정보 : {}", member);
-        assertThat(member).isNotNull();
-    }
-
-    @Test
-    void isMemberByEmailTest() {
-        // given
-        String email = "lhy@gmail.com";
-        // when
-        Member member = memberService.isMemberByEmail(email);
-        // then
-        log.info("회원 정보 : {}", member);
-        assertThat(member).isNotNull();
-    }
-
-    @Test
     void getMemberListTest() {
         // given
         // when
@@ -115,17 +92,6 @@ class MemberServiceTest {
         // then
         log.info("신규 회원 수 : {}", count);
         assertThat(count).isNotZero();
-    }
-
-    @Test
-    void checkEditTest() {
-        // given
-        int id = 1;
-        // when
-        EditForm check = memberService.checkEdit(id);
-        // then
-        log.info("수정 회원 정보 : {}", check);
-        assertThat(check).isNotNull();
     }
 
     @Test

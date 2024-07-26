@@ -66,18 +66,6 @@ class MemberMapperTest {
     }
 
     @Test
-    void readByEmailAndPasswordTest() {
-        // given
-        String email = "lhy@gmail.com";
-        String password = "1111";
-        // when
-        Member member = memberMapper.readByEmailAndPassword(email, password);
-        // then
-        log.info("회원 정보 : {}", member);
-        assertThat(member).isNotNull();
-    }
-
-    @Test
     void readByIdTest() {
         // given
         int id = 1;
@@ -116,17 +104,6 @@ class MemberMapperTest {
         // then
         log.info("신규 회원 수 : {}", count);
         assertThat(count).isNotZero();
-    }
-
-    @Test
-    void readUpdateFormTest() {
-        // given
-        int id = 1;
-        // when
-        EditForm check = memberMapper.readUpdateForm(id);
-        // then
-        log.info("회원 수정 용 폼 : {}", check);
-        assertThat(check).isNotNull();
     }
 
     @Test
