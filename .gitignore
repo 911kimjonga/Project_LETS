@@ -37,4 +37,7 @@ out/
 .vscode/
 
 ## Custom ###
+*.properties
+*.yml
+*.json
 log/
