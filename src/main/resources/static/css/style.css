@@ -879,7 +879,8 @@ ul#top_menu li:last-child {
 }
 @media (max-width: 767px) {
   ul#top_menu li:first-child {
-    display: none;
+    margin: 0.5vh;
+    /*display: none;*/
   }
 }
 ul#top_menu li a {
