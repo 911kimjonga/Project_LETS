@@ -1,5 +1,7 @@
 package com.vj.lets.web.member.controller;
 
+import com.vj.lets.domain.kakao.dto.KakaoDTO;
+import com.vj.lets.domain.kakao.service.KakaoLoginService;
 import com.vj.lets.domain.member.dto.*;
 import com.vj.lets.domain.member.service.MemberService;
 import com.vj.lets.domain.member.util.MemberCrypt;
@@ -36,8 +38,16 @@ public class MemberController {
     @Value("${naver.callbackUrl}")
     private String callbackUrl;
 
+    // 카카오 로그인 관련
+    @Value("${kakao.rest_key}")
+    private String kakaoRestKey;
+
+    @Value("${kakao.location}")
+    private String kakaoLocation;
+
     private final MemberService memberService;
     private final S3FileUpload s3FileUpload;
+    private final KakaoLoginService kakaoLoginService;
 
     /**
      * 회원 가입 화면 출력
@@ -118,6 +128,8 @@ public class MemberController {
 
         model.addAttribute("clientId", clientId);
         model.addAttribute("callbackUrl", callbackUrl);
+        model.addAttribute("kakaoLocation", kakaoLocation);
+        model.addAttribute("kakaoRestKey", kakaoRestKey);
 
         return "common/member/login";
     }
@@ -230,6 +242,22 @@ public class MemberController {
         return "success";
     }
 
+    @GetMapping("/kakao")
+//    @ResponseBody
+    public String kakaoLogin (KakaoDTO kakaoDTO, Member member,
+                              HttpServletRequest request, Model model) throws Exception {
+        System.out.println("dto.getCode()================"+kakaoDTO.getCode());
+
+        // 토큰 받기
+        String accessToken = kakaoLoginService.getAccessTokenFromKakao(kakaoRestKey, kakaoDTO.getCode());
+        kakaoDTO = kakaoLoginService.getUserInfo(accessToken, kakaoDTO);
+
+        System.out.println("kakaoDTO : " + kakaoDTO);
+        System.out.println("kakaoDTO : " + kakaoDTO);
+
+        return "111";
+    }
+
     /**
      * 회원 정보 수정 기능
      *
@@ -239,7 +267,7 @@ public class MemberController {
      * @param model     모델 객체
      * @return 논리적 뷰 이름
      */
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     @ResponseBody
     public String edit(@RequestPart("editData") MemberVO memberVO,
                        @RequestPart(value = "imagePath", required = false)  MultipartFile imagePath,

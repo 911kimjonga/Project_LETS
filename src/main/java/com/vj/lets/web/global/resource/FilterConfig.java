@@ -36,6 +36,7 @@ public class FilterConfig implements WebMvcConfigurer {
         filterRegistrationBean.addUrlPatterns("/host/*");
         filterRegistrationBean.addUrlPatterns("/mypage/*");
         filterRegistrationBean.addUrlPatterns("/google/*");
+        filterRegistrationBean.addUrlPatterns("/login/*");
 
         return filterRegistrationBean;
     }

@@ -80,7 +80,7 @@ document.getElementById('edit-form').addEventListener('submit', event => {
         requestForm.append('imagePath', imagePath.files[0]);
 
         fetch('member/edit', {
-            method: 'POST',
+            method: 'PUT',
             body: requestForm,
         }).then(response => {
             return response.text();

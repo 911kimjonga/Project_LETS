@@ -24,7 +24,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     public final List<String> loginNotEssential = Arrays.asList("/", "/**/*.ttf", "/**/*.woff", "/**/*.mp4", "/**/*.png", "/**/*.jpg", "/**/*.ico", "/**/*.html",
             "/**/assets/**", "/**/css/**", "/**/images/**", "/**/image/**", "/**/img/**", "/**/js/**", "/**/sass/**", "/**/upload_image/**", "/**/vendor/**",
-            "/member/register", "/member/login", "/admin/login", "/host/login", "/member/google", "/member/callback", "/google/login", "/member/naver", "/cafe", "/cafe/*", "/group", "/contact", "/support/**", "/error",
+            "/member/register", "/member/login", "/admin/login", "/host/login", "/member/google", "/member/callback", "/google/login", "/member/naver", "member/kakao", "/**/login/**", "/cafe", "/cafe/*", "/group", "/contact", "/support/**", "/error",
             "/admin/**", "/host/**");
 
     public final List<String> loginAdminEssential = Arrays.asList("/admin/**");
